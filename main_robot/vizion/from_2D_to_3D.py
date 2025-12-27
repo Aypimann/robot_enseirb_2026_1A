@@ -1,7 +1,43 @@
 import numpy as np
 
+def tag_coordonate_to_unscaled(
+        coordonates : list,
+        center : tuple,
+        pixel_per_radian : float
+):
+    """
+    Convert image coordonates to unscaled vectors
+
+    Parameters
+    ----------
+    coordonates : tuple of 4 tuples of 2 ints
+        corected coordonates of tag corners in image
+    center : tuple of 2 floats
+        center of image
+    pixel_per_radian :
+        how much pixel per radian there is at the center of image
+    
+    Returns
+    ----------
+    list(np.ndarray)
+        A_c, B_c, C_c, D_c vectors (each of shape (3,))
+    """
+    X_c = [
+        np.array((
+            (x - center[0]) / pixel_per_radian,
+            (y - center[1]) / pixel_per_radian,
+            1.
+        ))
+        for x, y in coordonates
+    ]
+
+    return [X_c[i] for i in (0, 1, 3, 2)]
+
+
+
+
 def compute_intersection_direction(Ac, Bc, Cc, Dc):
-    """Compute direction vector u = (Ac × Bc) × (Cc × Dc)."""
+    """Compute direction vector u = (Ac ^ Bc) ^ (Cc ^ Dc)."""
     n1 = np.cross(Ac, Bc)
     n2 = np.cross(Cc, Dc)
     u = np.cross(n1, n2)
@@ -18,21 +54,23 @@ def compute_u_XY(Xc, Yc, u):
 
     # Solve for alpha manually using Cramer's rule
     det = a * c - b * b
-    if abs(det) < 1e-12:
-        raise ValueError("Singular matrix in compute_u_XY (det ≈ 0).")
+    if abs(det) < 1e-8:
+        raise ValueError(
+            "Singular matrix cannot be inverted in compute_u_XY.")
 
     alpha = (d * c - b * e) / det
     return alpha * u
 
 
-def compute_tag_points(Ac, Bc, Cc, Dc, AB_length):
+def project_on_tag(Ac, Bc, Cc, Dc, AB_length):
     """
-    Compute PA, PB, PC, PD vectors in 3D from projected tag corners.
+    Project unscaled camera to Aurco corner vectors to their
+    acctual location
     
     Parameters
     ----------
     Ac, Bc, Cc, Dc : np.ndarray shape (3,)
-        Projected vectors A_c, B_c, C_c, D_c.
+        Unscaled vectors A_c, B_c, C_c, D_c.
     AB_length : float
         Real-world side length of the tag.
     

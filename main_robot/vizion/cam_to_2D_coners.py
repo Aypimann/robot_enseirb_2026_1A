@@ -7,21 +7,27 @@ aruco_params = cv2.aruco.DetectorParameters()
 # Créer le détecteur
 detector = cv2.aruco.ArucoDetector(aruco_dict, aruco_params)
 
-tags = ((),)
+cap = None
+
+tags = ([],[])
 current_frame = None
 frame_count = 0
 
 def open_camera():
+    global cap
     cap = cv2.VideoCapture(0, cv2.CAP_V4L2)
     if not cap.isOpened():
         print("❌ Impossible to open camera")
         return
     print("✅ Camera opened succesfully")
 
-    return cap
+def close_camera():
+    global cap
+    if cap != None:
+        cap.release()
 
-def capture_frame(cap):
-    global current_frame, frame_count
+def capture_frame():
+    global current_frame, frame_count, cap
     frame_count += 1
     current_frame = cap.read()[1]
     current_frame = cv2.cvtColor(current_frame, cv2.COLOR_BGR2GRAY)
@@ -32,11 +38,16 @@ def import_frame_from_file(path):
     current_frame = cv2.imread(path)
     current_frame = cv2.cvtColor(current_frame, cv2.COLOR_BGR2GRAY)
 
-
 def find_tags():
     global current_frame, tags
-    tags = detector.detectMarkers(current_frame)[0:2]
-
+    corners, ids, _ = detector.detectMarkers(current_frame)
+    # unpacking data
+    corners = [
+        [tuple(c) for c in t[0]]
+        for t in corners
+    ]
+    ids = [] if ids is None else [n[0] for n in ids]
+    tags = (corners, ids)
 
 def debug_show_found_tags(path=""):
     global tags, current_frame
@@ -66,6 +77,5 @@ if __name__ == "__main__":
     find_tags()
     debug_show_found_tags(input("Out path>"))
     
-    if cap != None:
-        cap.release()
+    close_camera()
 

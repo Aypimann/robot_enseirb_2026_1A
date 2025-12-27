@@ -4,9 +4,9 @@ import numpy as np
 
 arcuo_size = .1
 
-path = "/home/aypiman/Documents/dev/robot 1A/main_robot/test_vizion/im0.jpg"
+path = "/home/aypiman/Documents/dev/robot 1A/main_robot/vizion/im0.jpg"
 
-pixel_per_meter_at_one_meter = 2268*0.739*1.623268
+pixel_per_radian = 2268*0.739*1.623268
 center = (2268/2, 4032/2)
 
 
