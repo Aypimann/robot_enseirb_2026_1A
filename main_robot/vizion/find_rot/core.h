@@ -1,9 +1,7 @@
 #ifndef _FR_CORE_H
 #define _FR_CORE_H
 
-#ifndef _STDLIB_H
-#inculde <stdlib.h>
-#endif // !_STDLIB_H
+#include <stdlib.h>
 
 typedef struct point_list_s {
   float x, y, z;
@@ -11,6 +9,11 @@ typedef struct point_list_s {
 } point_list;
 
 void free_point_list(point_list* l);
+
+point_list* obs_list = NULL;
+point_list* th_list = NULL;
+
+float final_rotation_matrix[9];
 
 #endif // !_FR_CORE_H
 
