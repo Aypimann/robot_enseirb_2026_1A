@@ -1,4 +1,6 @@
 main_robot/__pycache__
 main_robot/vizion/__pycache__
-poetry.lock
+.venv
+buid
+robot_1A_eibot_2026.egg-info
 
