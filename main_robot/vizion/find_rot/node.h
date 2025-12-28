@@ -1,10 +1,6 @@
 #ifndef _NODE_H
 #define _NODE_H
 
-#ifndef _FR_CORE_H
-#include "core.h"
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -17,7 +13,7 @@ typedef struct node_s {
   char op;
 } node;
 
-int node_count = 0;
+extern int node_count;
 
 typedef struct node_list_s {
   node n;
@@ -37,6 +33,10 @@ node sqrt_node(node n);
 node sin_node(node n);
 
 node cos_node(node n);
+
+node make_parameter(float value);
+
+node make_const(float value);
 
 #endif // !_NODE_H
 

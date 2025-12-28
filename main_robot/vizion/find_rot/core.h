@@ -3,6 +3,10 @@
 
 #include <stdlib.h>
 
+#ifndef _NODE_H
+#include "node.h"
+#endif
+
 typedef struct point_list_s {
   float x, y, z;
   struct point_list_s* next;
@@ -10,10 +14,10 @@ typedef struct point_list_s {
 
 void free_point_list(point_list* l);
 
-point_list* obs_list = NULL;
-point_list* th_list = NULL;
+extern point_list* obs_list;
+extern point_list* th_list;
 
-float final_rotation_matrix[9];
+extern float final_rotation_matrix[9];
 
 #endif // !_FR_CORE_H
 

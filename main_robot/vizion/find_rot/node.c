@@ -1,5 +1,7 @@
 #include "node.h"
 
+int node_count = 0;
+
 void free_node_list(node_list* l){
   if (!l) return;
   free_node_list(l->next);

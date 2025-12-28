@@ -4,7 +4,6 @@
 //#define Py_LIMITED_API 0x030D0000
 #include <Python.h>
 
-
 static PyObject* add_obs_point(PyObject* self, PyObject* args){
   float x, y, z;
 
@@ -68,7 +67,7 @@ static PyObject* get_final_rotation_matrix(PyObject* self, PyObject* args){
   for (int i = 0; i < 9; i++)
     py_final_rot_mat[i] =
       PyFloat_FromDouble(final_rotation_matrix[i]);
-  return PyTuple_Pack(3,
+  return PyTuple_Pack(9,
     py_final_rot_mat[0], py_final_rot_mat[1], py_final_rot_mat[2],
     py_final_rot_mat[3], py_final_rot_mat[4], py_final_rot_mat[5],
     py_final_rot_mat[6], py_final_rot_mat[7], py_final_rot_mat[8]
@@ -89,6 +88,9 @@ static PyMethodDef find_rot_methods[] = {
     "Reset set of observed point."},
   {"get_obs_point_nb", get_obs_point_nb, METH_VARARGS,
     "Get the number of observed point."},
+
+  {"get_final_rotation_matrix", get_final_rotation_matrix, METH_VARARGS,
+    "Get the researshed rotation."},
   {NULL, NULL, 0, NULL}
 };
 
