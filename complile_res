@@ -1,0 +1,22 @@
+Processing /home/aypiman/Documents/dev/robot 1A
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: opencv-python>=4.9.0 in ./.venv/lib/python3.13/site-packages (from robot-1A-eibot-2026==0.1.0) (4.12.0.88)
+Requirement already satisfied: numpy>=1.26.0 in ./.venv/lib/python3.13/site-packages (from robot-1A-eibot-2026==0.1.0) (2.2.6)
+Requirement already satisfied: pyserial>=3.5 in ./.venv/lib/python3.13/site-packages (from robot-1A-eibot-2026==0.1.0) (3.5)
+Building wheels for collected packages: robot-1A-eibot-2026
+  Building wheel for robot-1A-eibot-2026 (pyproject.toml): started
+  Building wheel for robot-1A-eibot-2026 (pyproject.toml): finished with status 'done'
+  Created wheel for robot-1A-eibot-2026: filename=robot_1a_eibot_2026-0.1.0-cp313-cp313-linux_x86_64.whl size=23291 sha256=0c389335c92ea53e715bbaa2cd5613e77243898f82971325cc1d65c6e59c2be5
+  Stored in directory: /tmp/pip-ephem-wheel-cache-6hsknd87/wheels/e0/26/0e/bcd9e503e0e575e6361530b3208ce814cb45b2179e90ffd368
+Successfully built robot-1A-eibot-2026
+Installing collected packages: robot-1A-eibot-2026
+  Attempting uninstall: robot-1A-eibot-2026
+    Found existing installation: robot-1A-eibot-2026 0.1.0
+    Uninstalling robot-1A-eibot-2026-0.1.0:
+      Successfully uninstalled robot-1A-eibot-2026-0.1.0
+Successfully installed robot-1A-eibot-2026-0.1.0

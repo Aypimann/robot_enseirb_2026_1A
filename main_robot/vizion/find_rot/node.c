@@ -2,151 +2,175 @@
 
 int node_count = 0;
 
+void free_pointer_list(pointer_list* l){
+  if (!l) return;
+  free_pointer_list(l->next);
+  free(l);
+}
+
 void free_node_list(node_list* l){
   if (!l) return;
   free_node_list(l->next);
   free(l);
 }
 
-void free_node(node n){
-  if(!n.op || n.op == 'p') return;
-  free_node(*n.operand);
-  if(n.op == '+' || n.op == '*')
-    free_node(n.operand[1]);
-  free(n.operand);
-}
+node_list* temp_node_list = NULL;
 
-void reverse_node_list(node_list l, node_list** ret){
-  node_list* tmp = malloc(sizeof(node_list));
-  tmp->n = l.n;
-  tmp->next = *ret;
-  if(l.next) reverse_node_list(*l.next, &tmp);
-  *ret = tmp;
-}
-
-void dfs(node n, node_list** ret){
-  for (
-    int i = (n.op && n.op != 'p') ?
-      ((n.op == '+' || n.op == '*') ? 2 : 1):0;
-    i; i++
-  ) if (n.operand[i-1].op && n.operand[i-1].op != 'p') {
-    int is_operand_i_in_dfs = 0;
-    node_list* dfs_cpy = *ret;
-    while(dfs_cpy && !is_operand_i_in_dfs)
-      if (dfs_cpy->n.id == n.operand[i-1].id)
-        is_operand_i_in_dfs = 1;
-    dfs(n.operand[i-1], ret);
+void dfs(node* n, pointer_list** ret){
+  node* ops[] = {n->operand, n->operand2};
+  for(int i = 0; i < 2; i++) if (ops[i] && ops[i]->op) {
+    int is_operand_in_dfs = 0;
+    pointer_list* dfs_cpy = *ret;
+    while(dfs_cpy && !is_operand_in_dfs){
+      if (dfs_cpy->n == ops[i])
+        is_operand_in_dfs = 1;
+      dfs_cpy = dfs_cpy->next;
+    }
+    if (!is_operand_in_dfs) dfs(ops[i], ret);
   }
-  node_list* dfs = malloc(sizeof(node_list));
-  dfs->n = n;
-  dfs->next = *ret;
-  *ret = dfs;
+  pointer_list* nret = malloc(sizeof(pointer_list));
+  nret->n = n;
+  nret->next = *ret;
+  *ret = nret;
 }
+
+/*
+void node_viz(node* n, int level, node* visited[]){
+  //if(level > 5) return ;
+  for(int i = 0; i < 300; i++) if(visited[i] == n) return ;
+  int index = 0;
+  while (visited[index]) index++;
+  visited[index] = n;
+  char prefix[50];
+  for(int i = 0; i < 50; i++) prefix[i] = '.';
+  prefix[level] = 0;
+  printf("%sop %c value %f, grad %f @ %x\n",
+    prefix, n->op, n->value, n->grad, n);
+  node* ops[] = {n->operand, n->operand2};
+  for(int i = 0; i < 2; i++) if (ops[i])
+    node_viz(ops[i], level+1, visited);
+}*/
 
 void backward(node* loss){
   loss->grad = 1;
-  node_list* dfs_ret = NULL;
-  dfs(*loss, &dfs_ret);
-  node_list* rev_dfs = NULL;
-  reverse_node_list(*dfs_ret, &rev_dfs);
-  free_node_list(dfs_ret);
-  while(rev_dfs){
-    node n = rev_dfs->n;
+  pointer_list* dfs_ret = NULL;
+  dfs(loss, &dfs_ret);
+  pointer_list* old_dfs = dfs_ret;
+  while(dfs_ret){
+    node n = *((node*)dfs_ret->n);
     switch (n.op) {
       case 0: //constant
         break;
       case 'p': // parameter
         break;
       case '+':
-        n.operand[0].grad += n.grad;
-        n.operand[1].grad += n.grad;
+        n.operand->grad += n.grad;
+        n.operand2->grad += n.grad;
         break;
       case '*':
-        n.operand[0].grad += n.operand[1].value * n.grad;
-        n.operand[1].grad += n.operand[0].value * n.grad;
+        n.operand->grad += n.operand->value * n.grad;
+        n.operand2->grad += n.operand->value * n.grad;
         break;
       case 'S':
-        n.operand[0].grad += 1/(2*n.value) * n.grad;
+        n.operand->grad += 1/(2*n.value) * n.grad;
         break;
       case 's':
-        n.operand[0].grad += cos(n.operand[0].value) * n.grad;
+        n.operand->grad += cos(n.operand[0].value) * n.grad;
         break;
       case 'c':
-        n.operand[0].grad += -sin(n.operand[0].value) * n.grad;
+        n.operand->grad += -sin(n.operand[0].value) * n.grad;
         break;
       default:
         perror(
           "Error: unable to backtrack, unknown operator.");
         return;
     }
+    dfs_ret = dfs_ret->next;
   }
-  free_node_list(rev_dfs);
+  free_pointer_list(old_dfs);
 }
 
-node add(node a, node b){
-  node r; r.id = node_count++;
-  r.op = a.op || b.op ? '+' : 0;
-  r.value = a.value + b.value;
-  if(!r.op) return r;
+node* add(node* a, node* b){
+  node r;
+  r.op = a->op || b->op ? '+' : 0;
+  r.value = a->value + b->value;
   r.grad = 0.;
-  r.operand = malloc(2*sizeof(node));
-  r.operand[0] = a;
-  r.operand[1] = b;
-  return r;
+  r.operand = r.op ? a : NULL;
+  r.operand2 = r.op ? b : NULL;
+  node_list* tmp = malloc(sizeof(node_list));
+  tmp->n = r;
+  tmp->next = temp_node_list;
+  temp_node_list = tmp;
+  return &tmp->n;
 }
 
-node mult(node a, node b){
-  node r; r.id = node_count++;
-  r.op = a.op || b.op ? '*' : 0;
-  r.value = a.value * b.value;
-  if(!r.op) return r;
+node* mult(node* a, node* b){
+  node r;
+  r.op = a->op || b->op ? '*' : 0;
+  r.value = a->value * b->value;
   r.grad = 0.;
-  r.operand = malloc(2*sizeof(node));
-  r.operand[0] = a;
-  r.operand[1] = b;
-  return r;
+  r.operand = r.op ? a : NULL;
+  r.operand2 = r.op ? b : NULL;
+  node_list* tmp = malloc(sizeof(node_list));
+  tmp->n = r;
+  tmp->next = temp_node_list;
+  temp_node_list = tmp;
+  return &tmp->n;
 }
 
-node sqrt_node(node n){
-  node r; r.id = node_count++;
-  r.op = n.op ? 'S' : 0;
-  r.value = sqrt(n.value);
-  if(!r.op) return r;
+node* sqrt_node(node* n){
+  node r;
+  r.op = n->op ? 'S' : 0;
+  r.value = sqrt(n->value);
   r.grad = 0.;
-  r.operand = malloc(sizeof(node));
-  *r.operand = n;
-  return r;
+  r.operand = r.op ? n : NULL;
+  r.operand2 = NULL;
+  node_list* tmp = malloc(sizeof(node_list));
+  tmp->n = r;
+  tmp->next = temp_node_list;
+  temp_node_list = tmp;
+  return &tmp->n;
 }
 
-node sin_node(node n){
-  node r; r.id = node_count++;
-  r.op = n.op ? 's' : 0;
-  r.value = sin(n.value);
-  if(!r.op) return r;
+node* sin_node(node* n){
+  node r;
+  r.op = n->op ? 's' : 0;
+  r.value = sin(n->value);
   r.grad = 0.;
-  r.operand = malloc(sizeof(node));
-  *r.operand = n;
-  return r;
+  r.operand = r.op ? n : NULL;
+  r.operand2 = NULL;
+  node_list* tmp = malloc(sizeof(node_list));
+  tmp->n = r;
+  tmp->next = temp_node_list;
+  temp_node_list = tmp;
+  return &tmp->n;
 }
 
-node cos_node(node n){
-  node r; r.id = node_count++;
-  r.op = n.op ? 'c' : 0;
-  r.value = cos(n.value);
-  if(!r.op) return r;
+node* cos_node(node* n){
+  node r;
+  r.op = n->op ? 'c' : 0;
+  r.value = cos(n->value);
   r.grad = 0.;
-  r.operand = malloc(sizeof(node));
-  *r.operand = n;
-  return r;
+  r.operand = r.op ? n : NULL;
+  r.operand2 = NULL;
+  node_list* tmp = malloc(sizeof(node_list));
+  tmp->n = r;
+  tmp->next = temp_node_list;
+  temp_node_list = tmp;
+  return &tmp->n;
 }
 
-node make_parameter(float value){
-  node r = {value, 0.F, node_count++, NULL, 'p'};
-  return r;
+node* make_const(double value){
+  node r = {value, 0.F, NULL, NULL, 0};
+  node_list* tmp = malloc(sizeof(node_list));
+  tmp->n = r;
+  tmp->next = temp_node_list;
+  temp_node_list = tmp;
+  return &tmp->n;
 }
 
-node make_const(float value){
-  node r = {value, 0.F, node_count++, NULL, 0};
+node make_parameter(double value){
+  node r = {value, 0.F, NULL, NULL, 'p'};
   return r;
 }
 

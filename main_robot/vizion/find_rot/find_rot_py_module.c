@@ -20,8 +20,14 @@ static PyObject* add_obs_point(PyObject* self, PyObject* args){
 }
 
 static PyObject* py_flush_obs_point(PyObject* self, PyObject* args){
+  int len = 0;
+  for(point_list* l = obs_list; l; l = l->next) len++;
   free_point_list(obs_list);
   obs_list = NULL;
+  if (obs_vect_array) {
+    for (int i = 0; i < len; i++) free(obs_vect_array[i]);
+    free(obs_vect_array);
+  }
   
   return Py_BuildValue("");
 }
@@ -45,21 +51,25 @@ static PyObject* add_th_point(PyObject* self, PyObject* args){
   th_list = malloc(sizeof(point_list));
   *th_list = new_one;
 
+  nb_vect++;
+
   return Py_BuildValue("");
 }
 
 static PyObject* py_flush_th_point(PyObject* self, PyObject* args){
   free_point_list(th_list);
   th_list = NULL;
-  
+  if (th_vect_array) {
+    for (int i = 0; i < nb_vect; i++) free(th_vect_array[i]);
+    free(th_vect_array);
+  }
+  nb_vect = 0;
+
   return Py_BuildValue("");
 }
 
 static PyObject* get_th_point_nb(PyObject* self, PyObject* args){
-  int count = 0;
-  for(point_list* l = th_list; l; l = l->next) count ++;
-
-  return PyLong_FromLong(count);
+  return PyLong_FromLong(nb_vect);
 }
 
 static PyObject* get_final_rotation_matrix(PyObject* self, PyObject* args){
@@ -72,6 +82,11 @@ static PyObject* get_final_rotation_matrix(PyObject* self, PyObject* args){
     py_final_rot_mat[3], py_final_rot_mat[4], py_final_rot_mat[5],
     py_final_rot_mat[6], py_final_rot_mat[7], py_final_rot_mat[8]
   );
+}
+
+static PyObject* py_train(PyObject* self, PyObject* args){
+  train();
+  return Py_BuildValue("");
 }
 
 static PyMethodDef find_rot_methods[] = {
@@ -89,8 +104,10 @@ static PyMethodDef find_rot_methods[] = {
   {"get_obs_point_nb", get_obs_point_nb, METH_VARARGS,
     "Get the number of observed point."},
 
-  {"get_final_rotation_matrix", get_final_rotation_matrix, METH_VARARGS,
-    "Get the researshed rotation."},
+  {"get_final_rotation_matrix", get_final_rotation_matrix,
+    METH_VARARGS, "Get the researshed rotation."},
+  {"train", py_train, METH_VARARGS,
+    "Compute matrix"},
   {NULL, NULL, 0, NULL}
 };
 
