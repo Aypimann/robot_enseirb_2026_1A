@@ -11,8 +11,8 @@ Requirement already satisfied: pyserial>=3.5 in ./.venv/lib/python3.13/site-pack
 Building wheels for collected packages: robot-1A-eibot-2026
   Building wheel for robot-1A-eibot-2026 (pyproject.toml): started
   Building wheel for robot-1A-eibot-2026 (pyproject.toml): finished with status 'done'
-  Created wheel for robot-1A-eibot-2026: filename=robot_1a_eibot_2026-0.1.0-cp313-cp313-linux_x86_64.whl size=23291 sha256=0c389335c92ea53e715bbaa2cd5613e77243898f82971325cc1d65c6e59c2be5
-  Stored in directory: /tmp/pip-ephem-wheel-cache-6hsknd87/wheels/e0/26/0e/bcd9e503e0e575e6361530b3208ce814cb45b2179e90ffd368
+  Created wheel for robot-1A-eibot-2026: filename=robot_1a_eibot_2026-0.1.0-cp313-cp313-linux_x86_64.whl size=23616 sha256=620f9e29faab2c14f2df63ffb7ad2662b0b414a5700389e805a877856c569ab4
+  Stored in directory: /tmp/pip-ephem-wheel-cache-1yxp7iy3/wheels/e0/26/0e/bcd9e503e0e575e6361530b3208ce814cb45b2179e90ffd368
 Successfully built robot-1A-eibot-2026
 Installing collected packages: robot-1A-eibot-2026
   Attempting uninstall: robot-1A-eibot-2026

@@ -75,10 +75,10 @@ void backward(node* loss){
         n.operand->grad += 1/(2*n.value) * n.grad;
         break;
       case 's':
-        n.operand->grad += cos(n.operand[0].value) * n.grad;
+        n.operand->grad += cos(n.operand->value) * n.grad;
         break;
       case 'c':
-        n.operand->grad += -sin(n.operand[0].value) * n.grad;
+        n.operand->grad += -sin(n.operand->value) * n.grad;
         break;
       default:
         perror(

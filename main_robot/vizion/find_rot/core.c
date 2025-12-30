@@ -149,9 +149,9 @@ void train(){
   if (!obs_vect_array)
     fill_obs_vec_node();
 
-  pitch = make_parameter(0.1);
-  roll = make_parameter(0.1);
-  yaw = make_parameter(0.1);
+  pitch = make_parameter(0.);
+  roll = make_parameter(0.5);
+  yaw = make_parameter(0.);
 
   int itt = 0;
   node* loss;
@@ -163,11 +163,29 @@ void train(){
     yaw.grad = 0.;
     roll.grad = 0.;
     backward(loss);
-    
+
     printf("pitch grad : %f\n", pitch.grad);
     printf("yay grad : %f\n", yaw.grad);
     printf("roll grad : %f\n\n", roll.grad);
-    
+
+    /*node* n_cpy = loss;
+    while (n_cpy) {
+      printf("op %c val %f grad %f @ %x\n",
+        n_cpy->op, n_cpy->value, n_cpy->grad, n_cpy);
+      if (n_cpy->operand2 && n_cpy->operand2->op)
+        n_cpy = n_cpy->operand2;
+      else n_cpy = n_cpy->operand;
+    }*/
+
+    printf("roll : op %c val %f grad %f @ %x\n",
+      roll.op, roll.value, roll.grad, &roll);
+    node_list* ln = temp_node_list;
+    while(ln){
+      if(ln->n.operand == &roll)
+        printf(" op %c val %f grad %f @ %x\n",
+          ln->n.op, ln->n.value, ln->n.grad, &ln->n);
+      ln = ln->next;
+    }
 
     pitch.value -= pitch.grad * STEP;
     yaw.value -= yaw.grad * STEP;
@@ -176,6 +194,6 @@ void train(){
     free_node_list(temp_node_list);
 
     itt++;
-  }while (0 && loss->value/itt > INTOLERANCE);
+  } while (0 && loss->value/itt > INTOLERANCE);
 }
 
