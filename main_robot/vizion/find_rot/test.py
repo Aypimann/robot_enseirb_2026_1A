@@ -12,5 +12,7 @@ fr.add_th_point ( 0,        0,-3)
 
 fr.train()
 
-print(fr.get_final_rotation_matrix())
+mat = fr.get_final_rotation_matrix()
+for i in range(0,9,3):
+    print(mat[i:i+3])
 

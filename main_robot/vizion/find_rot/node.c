@@ -68,7 +68,7 @@ void backward(node* loss){
         n.operand2->grad += n.grad;
         break;
       case '*':
-        n.operand->grad += n.operand->value * n.grad;
+        n.operand->grad += n.operand2->value * n.grad;
         n.operand2->grad += n.operand->value * n.grad;
         break;
       case 'S':
@@ -160,13 +160,9 @@ node* cos_node(node* n){
   return &tmp->n;
 }
 
-node* make_const(double value){
+node make_const(double value){
   node r = {value, 0.F, NULL, NULL, 0};
-  node_list* tmp = malloc(sizeof(node_list));
-  tmp->n = r;
-  tmp->next = temp_node_list;
-  temp_node_list = tmp;
-  return &tmp->n;
+  return r;
 }
 
 node make_parameter(double value){

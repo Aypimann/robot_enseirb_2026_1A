@@ -41,9 +41,7 @@ node* sin_node(node* n);
 
 node* cos_node(node* n);
 
-node* make_const(double value);
-
-node* make_link_node(node** n);
+node make_const(double value);
 
 node make_parameter(double value);
 

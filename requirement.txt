@@ -1,5 +1,8 @@
 # You have to be able to read/write USB ports for esp coms
 
-poetry # pour la gestion des dépendances python
 arduino-cli
+python
+gcc
+
+# You need a python virtual environement
 
