@@ -1,11 +1,8 @@
 #ifndef _FR_CORE_H
 #define _FR_CORE_H
 
-#include <stdlib.h>
-
-#ifndef _NODE_H
-#include "node.h"
-#endif
+#include "pos.h"
+#include "rot.h"
 
 typedef struct point_list_s {
   float x, y, z;
@@ -17,13 +14,11 @@ void free_point_list(point_list* l);
 extern point_list* obs_list;
 extern point_list* th_list;
 
-extern float final_rotation_matrix[9];
+extern float final_rotation[3];
+extern float final_position[3];
 extern int nb_vect;
 
-extern node** th_vect_array;
-extern node** obs_vect_array;
-
-void train();
+void compute(void);
 
 #endif // !_FR_CORE_H
 

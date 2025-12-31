@@ -72,24 +72,20 @@ static PyObject* get_th_point_nb(PyObject* self, PyObject* args){
   return PyLong_FromLong(nb_vect);
 }
 
-static PyObject* get_final_rotation_matrix(PyObject* self, PyObject* args){
-  PyObject* py_final_rot_mat[9];
-  for (int i = 0; i < 9; i++)
-    py_final_rot_mat[i] =
-      PyFloat_FromDouble(final_rotation_matrix[i]);
-  return PyTuple_Pack(9,
-    py_final_rot_mat[0], py_final_rot_mat[1], py_final_rot_mat[2],
-    py_final_rot_mat[3], py_final_rot_mat[4], py_final_rot_mat[5],
-    py_final_rot_mat[6], py_final_rot_mat[7], py_final_rot_mat[8]
+static PyObject* py_compute(PyObject* self, PyObject* args){
+  compute();
+  PyObject* py_final_pos[6];
+  for (int i = 0; i < 3; i++)
+    py_final_pos[i] = PyFloat_FromDouble(final_rotation[i]);
+  for (int i = 0; i < 3; i++)
+    py_final_pos[i + 3] = PyFloat_FromDouble(final_position[i]);
+  return PyTuple_Pack(6,
+    py_final_pos[0], py_final_pos[1], py_final_pos[2],
+    py_final_pos[3], py_final_pos[4], py_final_pos[5]
   );
 }
 
-static PyObject* py_train(PyObject* self, PyObject* args){
-  train();
-  return Py_BuildValue("");
-}
-
-static PyMethodDef find_rot_methods[] = {
+static PyMethodDef pft_methods[] = {
   {"add_th_point", add_th_point, METH_VARARGS,
     "Add a point in the set of knwon point in space."},
   {"flush_th_point", py_flush_th_point, METH_VARARGS,
@@ -104,22 +100,20 @@ static PyMethodDef find_rot_methods[] = {
   {"get_obs_point_nb", get_obs_point_nb, METH_VARARGS,
     "Get the number of observed point."},
 
-  {"get_final_rotation_matrix", get_final_rotation_matrix,
-    METH_VARARGS, "Get the researshed rotation."},
-  {"train", py_train, METH_VARARGS,
-    "Compute matrix"},
+  {"compute", py_compute, METH_VARARGS,
+    "Compute right position, returns (yaw, pitch, roll, x, y, z)"},
   {NULL, NULL, 0, NULL}
 };
 
-static struct PyModuleDef find_rot_module = {
+static struct PyModuleDef pft_module = {
   PyModuleDef_HEAD_INIT,
-  "find_rot",
+  "pos_from_3Dtags",
   NULL,
   -1,
-  find_rot_methods
+  pft_methods
 };
 
-PyMODINIT_FUNC PyInit_find_rot(void){
-  return PyModule_Create(&find_rot_module);
+PyMODINIT_FUNC PyInit_pos_from_3Dtags(void){
+  return PyModule_Create(&pft_module);
 }
 

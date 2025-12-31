@@ -34,23 +34,6 @@ void dfs(node* n, pointer_list** ret){
   *ret = nret;
 }
 
-/*
-void node_viz(node* n, int level, node* visited[]){
-  //if(level > 5) return ;
-  for(int i = 0; i < 300; i++) if(visited[i] == n) return ;
-  int index = 0;
-  while (visited[index]) index++;
-  visited[index] = n;
-  char prefix[50];
-  for(int i = 0; i < 50; i++) prefix[i] = '.';
-  prefix[level] = 0;
-  printf("%sop %c value %f, grad %f @ %x\n",
-    prefix, n->op, n->value, n->grad, n);
-  node* ops[] = {n->operand, n->operand2};
-  for(int i = 0; i < 2; i++) if (ops[i])
-    node_viz(ops[i], level+1, visited);
-}*/
-
 void backward(node* loss){
   loss->grad = 1;
   pointer_list* dfs_ret = NULL;

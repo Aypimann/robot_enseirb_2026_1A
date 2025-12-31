@@ -91,10 +91,10 @@ def project_on_tag(Ac, Bc, Cc, Dc, AB_length):
     scale_CD = AB_length / np.linalg.norm(u_CD)
 
     # Step 4: compute PA, PB, PC, PD
-    PA = scale_AB * Ac
-    PB = scale_AB * (Ac + u_AB)
-    PC = scale_CD * Cc
-    PD = scale_CD * (Cc + u_CD)
+    PA = tuple(scale_AB * Ac)
+    PB = tuple(scale_AB * (Ac + u_AB))
+    PC = tuple(scale_CD * Cc)
+    PD = tuple(scale_CD * (Cc + u_CD))
 
-    return PA, PB, PD, PC
+    return PA, PB, PC, PD
 
