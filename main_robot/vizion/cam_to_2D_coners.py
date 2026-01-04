@@ -43,7 +43,7 @@ def find_tags():
     corners, ids, _ = detector.detectMarkers(current_frame)
     # unpacking data
     corners = [
-        [tuple(c) for c in t[0]]
+        [tuple(map(float, c)) for c in t[0]]
         for t in corners
     ]
     ids = [] if ids is None else [n[0] for n in ids]

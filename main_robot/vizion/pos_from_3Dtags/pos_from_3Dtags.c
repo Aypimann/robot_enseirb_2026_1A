@@ -101,7 +101,8 @@ static PyMethodDef pft_methods[] = {
     "Get the number of observed point."},
 
   {"compute", py_compute, METH_VARARGS,
-    "Compute right position, returns (yaw, pitch, roll, x, y, z)"},
+    "Compute right position, returns (rx, ry, rz, x, y, z)"},
+  // Rotation is the blender's XYZ
   {NULL, NULL, 0, NULL}
 };
 

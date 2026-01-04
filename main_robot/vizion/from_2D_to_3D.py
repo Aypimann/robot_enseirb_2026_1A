@@ -40,8 +40,7 @@ def compute_intersection_direction(Ac, Bc, Cc, Dc):
     """Compute direction vector u = (Ac ^ Bc) ^ (Cc ^ Dc)."""
     n1 = np.cross(Ac, Bc)
     n2 = np.cross(Cc, Dc)
-    u = np.cross(n1, n2)
-    return u / np.linalg.norm(u)
+    return np.cross(n1, n2)
 
 
 def compute_u_XY(Xc, Yc, u):
@@ -59,7 +58,7 @@ def compute_u_XY(Xc, Yc, u):
             "Singular matrix cannot be inverted in compute_u_XY.")
 
     alpha = (d * c - b * e) / det
-    return alpha * u
+    return -alpha * u
 
 
 def project_on_tag(Ac, Bc, Cc, Dc, AB_length):
@@ -90,11 +89,14 @@ def project_on_tag(Ac, Bc, Cc, Dc, AB_length):
     scale_AB = AB_length / np.linalg.norm(u_AB)
     scale_CD = AB_length / np.linalg.norm(u_CD)
 
+    print("fds ", float(scale_AB), float(scale_CD))
+    print(u_AB, u_CD)
+
     # Step 4: compute PA, PB, PC, PD
-    PA = tuple(scale_AB * Ac)
-    PB = tuple(scale_AB * (Ac + u_AB))
-    PC = tuple(scale_CD * Cc)
-    PD = tuple(scale_CD * (Cc + u_CD))
+    PA = tuple(map(float, scale_AB * Ac))
+    PB = tuple(map(float, scale_AB * (Ac + u_AB)))
+    PC = tuple(map(float, scale_CD * Cc))
+    PD = tuple(map(float, scale_CD * (Cc + u_CD)))
 
     return PA, PB, PC, PD
 

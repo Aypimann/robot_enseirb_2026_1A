@@ -1,5 +1,6 @@
 main_robot/__pycache__
 main_robot/vizion/__pycache__
+main_robot/vizion/im*
 .venv
 build
 
