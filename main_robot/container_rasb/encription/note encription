@@ -1,2 +1,0 @@
-alice% gpg -c doc
-blake% gpg -d doc.gpg > doc
