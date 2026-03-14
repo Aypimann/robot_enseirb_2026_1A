@@ -7,6 +7,6 @@ void setup() {
 void loop() {
   if (Serial.available()) {
     String input = Serial.readStringUntil('\n');
-    Serial.println(input);
+    Serial.println("input");
   }
 }
