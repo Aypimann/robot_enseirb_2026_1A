@@ -1,8 +1,8 @@
-#define MR1pin1 15
-#define MR1pin2 4
+#define MR1pin1 13
+#define MR1pin2 12
 
-#define MR2pin1 4
-#define MR2pin2 5
+#define MR2pin1 14
+#define MR2pin2 27
 
 void setup() {
   // put your setup code here, to run once:

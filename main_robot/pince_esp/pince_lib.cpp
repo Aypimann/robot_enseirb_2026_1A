@@ -1,10 +1,15 @@
 #include "pince_lib.h"
 
+const float default_pince_pos = 160.0;
+ 
+float goal_pince = default_pince_pos;
+int is_pince_blocked = 0;
+
 const float mm_per_enc_tick = 0.0048;
 ESP32Encoder encoder;
 
 float get_pince_pos(){
-  return encoder.get_count() * mm_per_enc_tick + DEFAULT_PINCE_POS;
+  return encoder.getCount() * mm_per_enc_tick + default_pince_pos;
 }
 
 void setup_pince(){ 
@@ -17,20 +22,25 @@ void setup_pince(){
 
 
 int should_pince_move = 0;
-float last_pos = DEFAULT_PINCE_POS;
+float last_pos = default_pince_pos;
 
-void loop_pince() {
+int loop_pince() {
+  // return if something blocked the pince
+
+  float pos_pince = get_pince_pos();
   float dist_goal = goal_pince - pos_pince;
+  Serial.println("\n\n\n\nnew loop !");
+  Serial.println(dist_goal);
   // Goal reached :
-  if (goal_pince - 1.0 < pos_pince < goal_pince + 1.0){
+  if (-1.0 <= dist_goal && dist_goal <= 1.0){
     should_pince_move = 0;
     ledcWrite(MOT_A_PINCE, 0);
     ledcWrite(MOT_B_PINCE, 0);
-    return;
+    return 0;
   }
 
   // TODO : handle carefully the case where something blocks the pince
-  if (should_pince_move > 5 && last_pos === get_pince_pos()){
+  if (0) {//should_pince_move > 5 && last_pos == get_pince_pos()){
     should_pince_move = 0;
     goal_pince = pos_pince;
     ledcWrite(MOT_A_PINCE, 0);
@@ -52,8 +62,10 @@ void loop_pince() {
   }
 
   ledcWrite(other_mot, 0);
-  if (dist_goal < 10.0)
-    ledcWrite(mot_pin, (int) (256 * dist_goal));
+  if (dist_goal < 10.0){
+    Serial.println((int) (256 * dist_goal));
+    ledcWrite(mot_pin, (int) (256 * dist_goal));}
   else 
     ledcWrite(mot_pin, 255);
+  return 2;
 }
