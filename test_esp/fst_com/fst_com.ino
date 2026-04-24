@@ -1,12 +1,11 @@
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   while (!Serial) ;
-  Serial.println("ESP32 Echo Ready!");
+  Serial.println("ESP32 Ready!");
+  delay(1000);
 }
 
 void loop() {
-  if (Serial.available()) {
-    String input = Serial.readStringUntil('\n');
-    Serial.println(input);
-  }
+  Serial.println("tkt");
+  delay(500);
 }
