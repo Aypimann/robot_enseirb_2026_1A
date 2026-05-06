@@ -23,29 +23,35 @@ int32_t MovementHandler::distToSteps(float dist) {
   return roundf(steps);
 }
 
+template <bool block>
 void MovementHandler::moveSteps(int32_t steps) {
   steps *= MICROSTEPS;
   stepperL_->move(steps);
   stepperR_->move(-steps);
   /* The while loop is used to make these blocking. */
-  while (stepperL_->isRunning() || stepperR_->isRunning());
+  if constexpr (block)
+    while (stepperL_->isRunning() || stepperR_->isRunning());
 }
 
+template <bool block>
 void MovementHandler::rotateSteps(int32_t steps) {
   steps *= MICROSTEPS;
   stepperL_->move(steps);
   stepperR_->move(steps);
-  while (stepperL_->isRunning() || stepperR_->isRunning());
+  if constexpr (block)
+    while (stepperL_->isRunning() || stepperR_->isRunning());
 }
 
+template <bool block>
 void MovementHandler::moveDist(float dist) {
-  moveSteps(distToSteps(dist));
+  moveSteps<block>(distToSteps(dist));
 }
 
+template <bool block>
 void MovementHandler::rotate(float angle) {
   /* Convert the angle to a distance to be traveled by the bot. */
   float perimeter = WHEEL_DISTANCE * 2.0 * M_PI;
   float dist = perimeter / 2.0 * (angle / 360.0);
   int32_t steps = distToSteps(dist);
-  rotateSteps(steps);
+  rotateSteps<block>(steps);
 }

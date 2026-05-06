@@ -34,3 +34,16 @@ However, with these while loops we are blocked. We can't interrupt the steppers
 while they are not finished.
 
 **TODO**: Figure out a better way to handle this.
+
+### API for blocking
+Functions described above are blocking by default, to make them non blocking
+specify `false` as a template parameter.
+
+```cpp
+  MovementHandler hdl = MovementHandler();
+hdl.moveDist<false>(...);
+hdl.rotate<false>(...);
+hdl.moveDist<false>(...);
+```
+
+Here the robot will try to do these all at once.
