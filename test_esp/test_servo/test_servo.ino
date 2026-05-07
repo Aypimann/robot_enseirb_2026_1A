@@ -1,8 +1,8 @@
 // based on https://www.upesy.fr/blogs/tutorials/how-to-use-pwm-on-esp32-with-examples
 
-#define SERVO_DATA 25
+#define SERVO_DATA 15
 
-#define SERVO_PWM_FREQ 50
+#define SERVO_PWM_FREQ 1
 #define SERVO_PWM_RES 8
 
 #define SERVO_NETRAL_POS 13
@@ -15,7 +15,6 @@
 void setup(){
   //pinMode(2, OUTPUT);
   //digitalWrite(2, LOW);
-
 
   pinMode(SERVO_DATA, OUTPUT);
   ledcAttach(SERVO_DATA, SERVO_PWM_FREQ, SERVO_PWM_RES);
