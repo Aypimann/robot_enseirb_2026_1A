@@ -1,11 +1,7 @@
-1) ninja vide les frigos
-2) principal clear en buldozer marche arrière
-3) ninja fait tomber les caisses bien placées
-4) a) le principal mais les caisse bonne couleur dans le garde manger
-   b) en même  temps, le ninja met les vides dans les frigos
-
-
-
-conseils :
- bords arondis, sécu truc coinsé
- peut être changer le support moteur
+1) le robot principal prend les noisettes d'en face et les met dans le garde manger d'en face
+2) le robot principal va faire le thermomètre
+3) le ninja vide les frigos
+4) le ninja en saisiant les caisses vides pousse les caisses de bonne couleur hors de grenier (en parralèles des acctions précédentes)
+5) principal clear en buldozer dans le garde manger les caisses poussées par le ninja
+6) le ninja lache ses caises vides dans le frigo exterieur
+7) le nija va utiliser son actionneur de pince pour manger au dessus du garde au bord du grenier
