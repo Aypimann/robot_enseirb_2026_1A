@@ -8,17 +8,18 @@
  * @brief A class that wraps FastAccelStepper for interruption of the movement.
  */
 class Stepper {
-private:
+public:
   FastAccelStepper *hdl_;
-  int32_t current_, end_;
+  int32_t current_, end_, dbgcnt_;
   std::queue<int32_t> steps_;
+  bool firstTime_;
 
 public:
   /* Defined speed and accelerations for the stepper. */
   static const uint16_t SPEED_HZ = 1000;
   static const uint16_t STEP_ACCEL = 200;
 
-  Stepper(FastAccelStepperEngine& engine, uint8_t stepPin, uint8_t dirPin);
+  Stepper(FastAccelStepperEngine *engine, uint8_t stepPin, uint8_t dirPin);
   void request(int32_t steps);
   void stop();
   void resume();

@@ -26,8 +26,8 @@ int32_t MovementHandler::distToSteps(float dist) {
 template <bool block>
 void MovementHandler::moveSteps(int32_t steps) {
   steps *= MICROSTEPS;
-  stepperL_->move(steps);
-  stepperR_->move(-steps);
+  stepperL_->move(-steps);
+  stepperR_->move(steps);
   /* The while loop is used to make these blocking. */
   if constexpr (block)
     while (stepperL_->isRunning() || stepperR_->isRunning());
