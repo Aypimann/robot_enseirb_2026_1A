@@ -34,6 +34,14 @@ float Detector::getDistance() {
     duration = pulseIn(echoPin_, HIGH, 25000);
 
   constexpr float FACTOR = SOUND_SPEED / 2.0;
-  float distance = (duration * FACTOR);
-  return distance;
+  distance_ = (duration * FACTOR);
+  return distance_;
+}
+
+float Detector::cachedDistance() const {
+  return distance_;
+}
+
+bool Detector::hasCollision() const {
+  return distance_ < DISTANCE_THRESHOLD;
 }

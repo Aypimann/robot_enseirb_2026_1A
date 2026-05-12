@@ -22,12 +22,18 @@ public:
   Stepper(FastAccelStepperEngine *engine, uint8_t stepPin, uint8_t dirPin);
   /* Uninitialized */
   Stepper();
+
+  /**
+   * @brief Request a number of steps to be performed by the stepper.
+   * @param steps The requested steps.
+   * @note This is to keep the behaviour of the stepper async.
+   */
   void request(int32_t steps);
+
+  /* See MovementHandler documentation for methods below. */
   void stop();
   void resume();
-  /* To be called on every loop. */
   void processSteps();
-
   bool isStopped() const;
 };
 

@@ -47,12 +47,26 @@ public:
    */
   void rotate(float angle);
 
+  /**
+   * @brief Process the movements requested to the robot.
+   * @note This is to be called on every loop!
+   */
   void process();
 
+  /**
+   * @brief Stop the robot in its current movement.
+   */
   void stop();
 
+  /**
+   * @brief Resume the robot's movement.
+   * @note This can be safely called even if the robot hasn't been stopped.
+   */
   void resume();
 
+  /**
+   * @return Whether the robot is stopped or not.
+   */
   bool isStopped() const;
 };
 

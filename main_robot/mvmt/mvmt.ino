@@ -24,8 +24,8 @@ void loop() {
   }
 
   for (int i = 0; i < 4; i++) {
-    distances[i] = detectors[i].getDistance();
-    if (distances[i] < Detector::DISTANCE_THRESHOLD)
+    detectors[i].getDistance();
+    if (detectors[i].hasCollision())
       hdl.stop();
     else
       hdl.resume();
