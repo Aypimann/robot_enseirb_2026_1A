@@ -6,20 +6,33 @@ Stepper::Stepper(FastAccelStepperEngine *engine, uint8_t stepPin, uint8_t dirPin
   hdl_->setDirectionPin(dirPin);
   hdl_->setSpeedInHz(SPEED_HZ);
   hdl_->setAcceleration(STEP_ACCEL);
-  firstTime_ = true;
+  end_ = 0;
+  dbgcnt_ = 0;
+}
+
+/* Needed because CPP. */
+Stepper::Stepper() {
+  hdl_ = NULL;
   end_ = 0;
   dbgcnt_ = 0;
 }
 
 void Stepper::stop() {
   current_ = hdl_->getCurrentPosition();
+  stopped_ = true;
   /* Maybe we should be careful of whether we abruptly stop the robot. */
   hdl_->stopMove();
 }
 
 void Stepper::resume() {
+  if (!stopped_)
+    return;
   int32_t delta = end_ - current_;
   hdl_->move(delta);
+}
+
+bool Stepper::isStopped() const {
+  return stopped_;
 }
 
 void Stepper::request(int32_t steps) {

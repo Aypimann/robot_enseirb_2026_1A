@@ -7,6 +7,7 @@ Detector::Detector(uint8_t echoPin, bool analog) {
   isAnalog_ = analog;
 }
 
+/* At least 50 ms between the requests of each detector. */
 float Detector::getDistance() {
   digitalWrite(TRIGGER_PIN, LOW);
   delayMicroseconds(2);

@@ -1,21 +1,16 @@
-#include "mvmthdl.h"
-#include "stepper.h"
 #include "detector.h"
+#include "mvmthdl.h"
 #include <Arduino.h>
-#include <memory>
 
-// MovementHandler hdl = MovementHandler();
+MovementHandler hdl = MovementHandler();
 
-FastAccelStepperEngine engine = FastAccelStepperEngine();
-std::unique_ptr<Stepper> left = std::unique_ptr<Stepper>(), right = std::unique_ptr<Stepper>();
-// Stepper left = Stepper(&engine, 16, 4), right = Stepper(&engine, 5, 17);
-// Detector a = Detector(35), b = Detector(34), c = Detector(39, true), d = Detector(36, true);
+Detector detectors[4] = {Detector(35), Detector(34), Detector(39, true),
+                         Detector(36, true)};
+float distances[4];
 void setup() {
   Serial.begin(115200);
-  while (!Serial) ;
-  engine.init();
-  left = std::make_unique <Stepper>(&engine, 16, 4);
-  right = std::make_unique<Stepper>(&engine, 5, 17);
+  while (!Serial)
+    ;
 }
 
 bool done = false;
@@ -23,41 +18,18 @@ bool done = false;
 void loop() {
   if (!done) {
     done = true;
-    int32_t steps = MovementHandler::distToSteps(05.0) * 8;
-    left->request(-steps);
-    right->request(steps);
-    float perimeter = MovementHandler::WHEEL_DISTANCE * 2.0 * M_PI;
-    float dist = perimeter / 2.0 * (90.0 / 360.0);
-    steps = MovementHandler::distToSteps(dist) * 8;
-    left->request(-steps);
-    right->request(-steps);
-    steps = MovementHandler::distToSteps(07.0) * 8;
-    left->request(-steps);
-    right->request(steps);
+    hdl.moveDist(5.0);
+    hdl.rotate(90.0);
+    hdl.moveDist(7.0);
   }
 
-  // left.hdl_->move(700);
-  // right.hdl_->move(700);
+  for (int i = 0; i < 4; i++) {
+    distances[i] = detectors[i].getDistance();
+    if (distances[i] < Detector::DISTANCE_THRESHOLD)
+      hdl.stop();
+    else
+      hdl.resume();
+  }
 
-  left->processSteps();
-  right->processSteps();
-  
-  // if (!done) {
-  //   done = true;
-  //   hdl.moveDist(20.0);
-  //   hdl.rotate(90.0);
-  //   hdl.moveDist(10.0);
-  // }
-
-  /* New API ? Will be put inside MovementHandler */
-  // if constexpr (false) {
-  //   FastAccelStepperEngine engine = FastAccelStepperEngine();
-  //   Stepper left = Stepper(engine, 16, 4), right = Stepper(engine, 5, 17);
-  //   int32_t steps = MovementHandler::distToSteps(20.0);
-  //   left.request(steps);
-  //   right.request(-steps);
-
-  //   left.processSteps();
-  //   right.processSteps();
-  // }
+  hdl.process();
 }

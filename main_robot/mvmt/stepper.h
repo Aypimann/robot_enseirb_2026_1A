@@ -12,7 +12,7 @@ public:
   FastAccelStepper *hdl_;
   int32_t current_, end_, dbgcnt_;
   std::queue<int32_t> steps_;
-  bool firstTime_;
+  bool stopped_;
 
 public:
   /* Defined speed and accelerations for the stepper. */
@@ -20,11 +20,15 @@ public:
   static const uint16_t STEP_ACCEL = 200;
 
   Stepper(FastAccelStepperEngine *engine, uint8_t stepPin, uint8_t dirPin);
+  /* Uninitialized */
+  Stepper();
   void request(int32_t steps);
   void stop();
   void resume();
   /* To be called on every loop. */
   void processSteps();
+
+  bool isStopped() const;
 };
 
 #endif /* STEPPER_H_ */

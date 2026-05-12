@@ -1,6 +1,7 @@
 #ifndef MVMTHDL_H_
 #define MVMTHDL_H_
 
+#include "stepper.h"
 #include <Arduino.h>
 #include <FastAccelStepper.h>
 
@@ -8,14 +9,10 @@
 class MovementHandler {
 private:
   FastAccelStepperEngine engine_;
-  FastAccelStepper *stepperL_, *stepperR_;
-
-  static void setStepper(FastAccelStepper *s, uint8_t dirPin);
-
+  Stepper stepperL_, stepperR_;
   /**
    * @brief Rotate by a given number of steps.
    */
-  template <bool block = true>
   void rotateSteps(int32_t steps);
 
 public:
@@ -38,20 +35,25 @@ public:
   /**
    * @brief Move the robot by the given distance in centimeters.
    */
-  template <bool block = true>
   void moveDist(float dist);
   /**
    * @brief Move the robot by the given number of steps.
    */
-  template <bool block = true>
   void moveSteps(int32_t steps);
 
   /**
    * @brief Rotate the robot by a given angle in degrees.
    * @note This function is blocking and doesn't return while the robot is moving.
    */
-  template <bool block = true>
   void rotate(float angle);
+
+  void process();
+
+  void stop();
+
+  void resume();
+
+  bool isStopped() const;
 };
 
 #endif /* MVMTHDLH_ */
