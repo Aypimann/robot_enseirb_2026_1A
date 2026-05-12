@@ -4,8 +4,8 @@
 
 MovementHandler hdl = MovementHandler();
 
-Detector detectors[4] = {Detector(35), Detector(34), Detector(39, true),
-                         Detector(36, true)};
+Detector detectors[4] = {Detector(35, false), Detector(34, true), Detector(39, false, true),
+                         Detector(36, true, true)};
 float distances[4];
 void setup() {
   Serial.begin(115200);
@@ -25,7 +25,7 @@ void loop() {
 
   for (int i = 0; i < 4; i++) {
     detectors[i].getDistance();
-    if (detectors[i].hasCollision())
+    if (detectors[i].hasCollision() && detectors[i].isFront())
       hdl.stop();
     else
       hdl.resume();

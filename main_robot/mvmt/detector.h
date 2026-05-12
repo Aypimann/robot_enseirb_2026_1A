@@ -5,7 +5,7 @@
 class Detector {
 private:
   uint8_t echoPin_;
-  bool isAnalog_;
+  bool isAnalog_, isFront_;
   float distance_;
 
 public:
@@ -15,7 +15,7 @@ public:
   /* The minimum distance before we consider it a collision. */
   static constexpr float DISTANCE_THRESHOLD = 15.0;
 
-  Detector(uint8_t echoPin, bool analog = false);
+  Detector(uint8_t echoPin, bool isFront, bool analog = false);
 
   /**
    * @brief Calculates the distance from the given echo.
@@ -35,6 +35,11 @@ public:
    * @return Whether the above is true or not.
    */
   bool hasCollision() const;
+
+  /**
+   * @brief Is the detector on the front or the back?
+   */
+  bool isFront() const;
 };
 
 #endif /* DETECTOR_H_ */
