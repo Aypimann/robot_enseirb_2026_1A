@@ -22,6 +22,8 @@ public:
   /* Defined values. */
   static constexpr uint16_t STEPS_PER_ROTATION = 200;
   static constexpr uint16_t MICROSTEPS = 8;
+  char colision_forward=0;
+  char colision_backward=0;
   MovementHandler();
 
   /**
@@ -68,6 +70,13 @@ public:
    * @return Whether the robot is stopped or not.
    */
   bool isStopped() const;
+
+  /**
+   * @brief Get the direction of the robot.
+   * @return -1 if backward, 1 if forward.
+   * @note This shouldn't be considered for rotation.
+   */
+  Stepper::Direction direction() const;
 };
 
 #endif /* MVMTHDLH_ */

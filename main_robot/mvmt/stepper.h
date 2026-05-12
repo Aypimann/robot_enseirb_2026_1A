@@ -9,6 +9,13 @@
  */
 class Stepper {
 public:
+  /* Defined enumeration for clarity. */
+  enum Direction {
+    Forward = 1,
+    Backward = -1
+  };
+
+private:
   FastAccelStepper *hdl_;
   int32_t current_, end_, dbgcnt_;
   std::queue<int32_t> steps_;
@@ -29,6 +36,12 @@ public:
    * @note This is to keep the behaviour of the stepper async.
    */
   void request(int32_t steps);
+
+  /**
+   * @brief Gets the direction of the currently requested movement.
+   * @return Either forward or backward depending on the direction.
+   */
+  Direction direction() const ;
 
   /* See MovementHandler documentation for methods below. */
   void stop();

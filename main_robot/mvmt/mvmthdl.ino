@@ -1,5 +1,6 @@
-#include <math.h>
 #include "mvmthdl.h"
+#include "stepper.h"
+#include <math.h>
 
 MovementHandler::MovementHandler() {
   engine_ = FastAccelStepperEngine();
@@ -27,9 +28,7 @@ void MovementHandler::rotateSteps(int32_t steps) {
   stepperR_.request(steps);
 }
 
-void MovementHandler::moveDist(float dist) {
-  moveSteps(distToSteps(dist));
-}
+void MovementHandler::moveDist(float dist) { moveSteps(distToSteps(dist)); }
 void MovementHandler::rotate(float angle) {
   /* Convert the angle to a distance to be traveled by the bot. */
   float perimeter = WHEEL_DISTANCE * 2.0 * M_PI;
@@ -55,4 +54,13 @@ void MovementHandler::process() {
 
 bool MovementHandler::isStopped() const {
   return stepperL_.isStopped() && stepperR_.isStopped();
+}
+
+using Direction = Stepper::Direction;
+Stepper::Direction MovementHandler::direction() const {
+  if (stepperL_.direction() == Direction::Backward &&
+      stepperR_.direction() == Direction::Backward) {
+    return Direction::Backward;
+  } else
+    return Direction::Forward;
 }
