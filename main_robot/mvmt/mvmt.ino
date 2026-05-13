@@ -18,9 +18,9 @@ bool done = false;
 void loop() {
   if (!done) {
     done = true;
-    hdl.moveSteps(200);
-    // hdl.moveDist(20.0);
-    // hdl.moveDist(-20.0);
+    //hdl.moveSteps(200);
+    hdl.moveDist(100.0);
+    hdl.moveDist(-100.0);
     // hdl.rotate(90.0);
     // hdl.moveDist(7.0);
   }
