@@ -28,7 +28,9 @@ void MovementHandler::rotateSteps(int32_t steps) {
   stepperR_.request(steps);
 }
 
-void MovementHandler::moveDist(float dist) { moveSteps(distToSteps(dist)); }
+void MovementHandler::moveDist(float dist) {
+  moveSteps(distToSteps(dist));
+}
 void MovementHandler::rotate(float angle) {
   /* Convert the angle to a distance to be traveled by the bot. */
   float perimeter = WHEEL_DISTANCE * 2.0 * M_PI;
