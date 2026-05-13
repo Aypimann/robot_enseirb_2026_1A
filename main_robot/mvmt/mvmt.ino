@@ -15,12 +15,12 @@ void setup() {
 }
 
 bool done = false;
-long timer=millis();
 void loop() {
   if (!done) {
     done = true;
-    hdl.moveDist(20.0);
-    hdl.moveDist(-20.0);
+    hdl.moveSteps(200);
+    // hdl.moveDist(20.0);
+    // hdl.moveDist(-20.0);
     // hdl.rotate(90.0);
     // hdl.moveDist(7.0);
   }
