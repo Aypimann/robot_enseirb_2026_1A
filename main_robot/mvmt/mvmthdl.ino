@@ -80,8 +80,6 @@ void MovementHandler::cycleDetector() {
   if (now >= lastPing_ + DETECTOR_DELAY_MS) {
     lastPing_ = now;
     detectors_[curDetector_].getDistance();
-    /* Make sure this is a constant that get optimized out. */
-    constexpr uint8_t SZ = detectors_.size();
-    curDetector_ = (curDetector_ + 1) % SZ;
+    curDetector_ = (curDetector_ + 1) % detectors_.size();
   }
 }
