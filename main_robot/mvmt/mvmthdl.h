@@ -26,8 +26,8 @@ private:
 
 public:
   /* Experimental values. */
-  static constexpr float WHEEL_DIAMETER = 7.13;
-  static constexpr float WHEEL_DISTANCE = 19.5;
+  static constexpr float WHEEL_DIAMETER = 7.32;
+  static constexpr float WHEEL_DISTANCE = 18.5;
   /* Defined values. */
   static constexpr uint16_t STEPS_PER_ROTATION = 200;
   static constexpr uint16_t MICROSTEPS = 8;

@@ -63,7 +63,7 @@ bool MovementHandler::isStopped() const {
 
 using Direction = Stepper::Direction;
 Stepper::Direction MovementHandler::direction() const {
-  if (stepperL_.direction() == Direction::Backward &&
+  if (stepperL_.direction() == Direction::Forward &&
       stepperR_.direction() == Direction::Backward) {
     return Direction::Backward;
   } else

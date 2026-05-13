@@ -21,8 +21,8 @@ private:
 public:
   int32_t currentReq_;
   /* Defined speed and accelerations for the stepper. */
-  static const uint16_t SPEED_HZ = 0200;
-  static const uint16_t STEP_ACCEL = 200;
+  static const uint16_t SPEED_HZ = 1000;
+  static const uint16_t STEP_ACCEL = 2000;
 
   Stepper(FastAccelStepperEngine *engine, uint8_t stepPin, uint8_t dirPin);
   /* Uninitialized */
