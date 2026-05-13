@@ -1,3 +1,4 @@
+#include "detector.h"
 #include "esp32-hal.h"
 #include "mvmthdl.h"
 #include "stepper.h"
@@ -9,8 +10,12 @@ MovementHandler::MovementHandler() {
   stepperL_ = Stepper(&engine_, 16, 4);
   stepperR_ = Stepper(&engine_, 5, 17);
   curDetector_ = 0;
-  detectors_ = {{Detector(35, false), Detector(34, true),
-                 Detector(39, false, true), Detector(36, true, true)}};
+  detectors_ = {Detector(34), Detector(36, true), Detector(35), Detector(39, true)};
+  lastPing_ = 0;
+}
+
+bool MovementHandler::frontDetector(uint8_t index) {
+  return index < 2;
 }
 
 int32_t MovementHandler::distToSteps(float dist) {
@@ -85,6 +90,10 @@ void MovementHandler::process() {
   stepperL_.processSteps();
   stepperR_.processSteps();
   cycleDetector();
+  handleCollisions();
+  // Serial.printf("| front: %d back: %d\r\n", frontCollision_, backCollision_);
+  maybeResume();
+  resetCollisions();
 }
 
 bool MovementHandler::isStopped() const {
@@ -109,7 +118,37 @@ void MovementHandler::cycleDetector() {
   const uint64_t now = millis();
   if (now >= lastPing_ + DETECTOR_DELAY_MS) {
     lastPing_ = now;
+    // Serial.printf("Pinging %d\r\n", curDetector_);
     detectors_[curDetector_].getDistance();
     curDetector_ = (curDetector_ + 1) % detectors_.size();
   }
+}
+
+void MovementHandler::handleCollisions() {
+  for (uint8_t i = 0; i < 4; i++) {
+    // Serial.printf("%f ", detectors_[i].cachedDistance());
+    if (!detectors_[i].hasCollision())
+      continue;
+
+    if (frontDetector(i) && direction() == Stepper::Forward) {
+      frontCollision_ = true;
+      stop();
+    } else if (!frontDetector(i) && direction() == Stepper::Backward) {
+      backCollision_ = true;
+      stop();
+    }
+  } 
+}
+
+void MovementHandler::resetCollisions() {
+  /* Used to actualize them again. */
+  frontCollision_ = false;
+  backCollision_ = false;
+}
+
+void MovementHandler::maybeResume() {
+  if (!frontCollision_ && direction() == Stepper::Forward)
+    resume();
+  if (!backCollision_ && direction() == Stepper::Backward)
+    resume();
 }

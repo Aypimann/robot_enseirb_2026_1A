@@ -1,11 +1,10 @@
 #include "detector.h"
 
-Detector::Detector(uint8_t echoPin, bool isFront, bool analog) {
+Detector::Detector(uint8_t echoPin, bool analog) {
   pinMode(TRIGGER_PIN, OUTPUT);
   pinMode(echoPin, INPUT);
   echoPin_ = echoPin;
   isAnalog_ = analog;
-  isFront_ = isFront;
 }
 
 /* At least 50 ms between the requests of each detector. */
@@ -39,14 +38,6 @@ float Detector::getDistance() {
   return distance_;
 }
 
-float Detector::cachedDistance() const {
-  return distance_;
-}
+float Detector::cachedDistance() const { return distance_; }
 
-bool Detector::hasCollision() const {
-  return distance_ < DISTANCE_THRESHOLD;
-}
-
-bool Detector::isFront() const {
-  return isFront_;
-}
+bool Detector::hasCollision() const { return distance_ < DISTANCE_THRESHOLD; }
