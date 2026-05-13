@@ -16,6 +16,8 @@ public:
   static constexpr float DISTANCE_THRESHOLD = 20.0;
 
   Detector(uint8_t echoPin, bool isFront, bool analog = false);
+  /* Default impl because CPP. */
+  Detector() = default;
 
   /**
    * @brief Calculates the distance from the given echo.

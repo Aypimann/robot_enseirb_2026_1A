@@ -12,6 +12,7 @@ Stepper::Stepper(FastAccelStepperEngine *engine, uint8_t stepPin,
   end_ = 0;
   stopped_=false;
   currentReq_ = -1;
+  stopped_ = false;
 }
 
 /* Needed because CPP. */
@@ -20,6 +21,7 @@ Stepper::Stepper() {
   hdl_ = NULL;
   end_ = 0;
   currentReq_ = -1;
+  stopped_ = false;
 }
 
 void Stepper::stop() {
@@ -42,7 +44,6 @@ void Stepper::resume() {
 bool Stepper::isStopped() const { return stopped_; }
 
 void Stepper::request(int32_t steps) {
-  //Serial.printf("req steps: %d\r\n", steps);
   reqs_.push_back(steps);
 }
 
@@ -51,6 +52,8 @@ void Stepper::processSteps() {
   //Serial.printf("pos: %d vs end: %d\r\n", current_, end_);
   if (current_ == end_ && leftInQueue() != 0) {
     currentReq_++;
+    /* Just to make sure we're indeed running. */
+    stopped_ = false;
     const int32_t steps = reqs_[currentReq_];
     end_ += steps;
     hdl_->move(steps);
@@ -64,5 +67,5 @@ Stepper::Direction Stepper::direction() const {
 
 uint32_t Stepper::leftInQueue() const { return reqs_.size() - currentReq_ - 1; }
 int32_t Stepper::currentRequest() const { return currentReq_; }
-
 const std::vector<int32_t> &Stepper::requests() const { return reqs_; }
+int32_t Stepper::position() const { return hdl_->getCurrentPosition(); }

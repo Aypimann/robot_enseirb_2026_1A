@@ -4,16 +4,25 @@
 #include "stepper.h"
 #include <Arduino.h>
 #include <FastAccelStepper.h>
+#include "detector.h"
 
 /* TODO: Handle when asked to stop. */
 class MovementHandler {
 private:
+  static constexpr uint16_t DETECTOR_DELAY_MS = 50;
   FastAccelStepperEngine engine_;
   Stepper stepperL_, stepperR_;
+  float posX_, posY_;
+  uint64_t lastPing_;
+  uint8_t curDetector_;
+  std::array<Detector, 4> detectors_;
   /**
    * @brief Rotate by a given number of steps.
    */
   void rotateSteps(int32_t steps);
+
+  /* Cycle through the detectors to actualize. */
+  void cycleDetector();
 
 public:
   /* Experimental values. */
@@ -77,6 +86,8 @@ public:
    * @note This shouldn't be considered for rotation.
    */
   Stepper::Direction direction() const;
+
+  std::array<float, 2> getPos() const;  
 };
 
 #endif /* MVMTHDLH_ */

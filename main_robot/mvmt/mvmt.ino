@@ -11,7 +11,6 @@ void setup() {
   Serial.begin(115200);
   while (!Serial)
     ;
-  Serial.println("began communication");
 }
 
 bool done = false;
@@ -25,7 +24,6 @@ void loop() {
     // hdl.moveDist(7.0);
   }
 
-
   for (int i = 0; i < 4; i++) {
     detectors[i].getDistance();
     delay(50);
@@ -33,14 +31,12 @@ void loop() {
       if (hdl.direction() == Stepper::Forward) {
         if (detectors[i].isFront()) {
           hdl.colision_forward = 1;
-          Serial.println("s1");
           hdl.stop();
         }
       } else {
         if (!detectors[i].isFront()) {
           hdl.colision_backward = 1;
           hdl.stop();
-          Serial.println("s2");
         }
       }
     }

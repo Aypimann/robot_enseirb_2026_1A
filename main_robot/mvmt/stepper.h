@@ -53,6 +53,9 @@ public:
   int32_t currentRequest() const;
   /* Lets you view the history of the requests. */
   const std::vector<int32_t> &requests() const;
+
+  /* Position of the inner fast accel stepper. */
+  int32_t position() const;
 };
 
 #endif /* STEPPER_H_ */
