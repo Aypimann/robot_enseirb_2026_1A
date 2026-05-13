@@ -15,7 +15,7 @@ public:
   /* The minimum distance before we consider it a collision. */
   static constexpr float DISTANCE_THRESHOLD = 20.0;
 
-  Detector(uint8_t echoPin, bool isFront, bool analog = false);
+  Detector(uint8_t echoPin, bool analog = false);
   /* Default impl because CPP. */
   Detector() = default;
 
@@ -37,11 +37,6 @@ public:
    * @return Whether the above is true or not.
    */
   bool hasCollision() const;
-
-  /**
-   * @brief Is the detector on the front or the back?
-   */
-  bool isFront() const;
 };
 
 #endif /* DETECTOR_H_ */

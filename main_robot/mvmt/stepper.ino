@@ -27,7 +27,6 @@ Stepper::Stepper() {
 void Stepper::stop() {
   current_ = hdl_->getCurrentPosition();
   stopped_ = true;
-  Serial.printf("current: %d\r\n", current_);
   /* WARNING: Must be forceStop! */
   hdl_->forceStop();
 }
@@ -37,7 +36,6 @@ void Stepper::resume() {
     return;
   stopped_ = false;
   const int32_t delta = end_ - current_;
-  Serial.printf("delta: %d\r\n", delta);
   hdl_->move(delta);
 }
 
@@ -49,7 +47,7 @@ void Stepper::request(int32_t steps) {
 
 void Stepper::processSteps() {
   current_ = hdl_->getCurrentPosition();
-  //Serial.printf("pos: %d vs end: %d\r\n", current_, end_);
+  // Serial.printf("pos: %d vs end: %d\r\n", current_, end_);
   if (current_ == end_ && leftInQueue() != 0) {
     currentReq_++;
     /* Just to make sure we're indeed running. */
