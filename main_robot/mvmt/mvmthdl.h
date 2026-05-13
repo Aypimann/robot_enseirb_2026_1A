@@ -93,8 +93,8 @@ public:
    * @note This shouldn't be considered for rotation.
    */
   Stepper::Direction direction() const;
-
-  std::array<float, 2> getPos() const;
+  void go_to(std::array<float, 2>);
+  std::array<float, 2> getPos() const;  
 };
 
 #endif /* MVMTHDLH_ */

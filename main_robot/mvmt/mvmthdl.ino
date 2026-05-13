@@ -45,7 +45,12 @@ void MovementHandler::rotate(float angle) {
   int32_t steps = distToSteps(dist);
   rotateSteps(steps);
 }
+float MovementHandler::calc_angle(){
+  
+}
+void MovementHandler::go_to(std::array<float, 2>) {
 
+}
 void MovementHandler::stop() {
   stepperL_.stop();
   stepperR_.stop();
