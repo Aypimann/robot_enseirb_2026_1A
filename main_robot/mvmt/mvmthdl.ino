@@ -40,11 +40,36 @@ void MovementHandler::rotate(float angle) {
   int32_t steps = distToSteps(dist);
   rotateSteps(steps);
 }
-float MovementHandler::calc_angle(){
-  
+void  MovementHandler::set_angle(float angle_aim,char inverted){
+  angle_aim+=180.0f*(1-inverted);
+  float rotation=fmod(angle_aim-angle_ac,360.0f);
+  if(abs(rotation)>180)
+    rotation=rotation-signe(rotation)*360;
+  rotate(rotation);
+  Serial.printf("cor:%f ac:%f\n",rotation,angle_ac);
+  angle_ac+=rotation;
 }
-void MovementHandler::go_to(std::array<float, 2>) {
 
+int signe(float val){
+  return val<0 ? -1:1;
+}
+float MovementHandler::calc_rotation(float dx,float dy){
+  
+  float delta_angle=0;
+  if((abs(dx)>MOVE_MIN_DIST)||(abs(dy)>MOVE_MIN_DIST)){
+    delta_angle=atan(dy/dx)*(180/PI);//repètre tab
+    if(dx<0)
+      delta_angle= delta_angle-180;
+  }
+  
+  return delta_angle;
+}
+void MovementHandler::go_to(float x_aim,float y_aim,char sens) {
+  float dx=x_aim-posX_;
+  float dy=y_aim-posY_;
+  
+  set_angle(calc_rotation(dx,dy),sens);
+  moveDist(sqrt(pow(dx,2)+pow(dy,2)));
 }
 void MovementHandler::stop() {
   stepperL_.stop();

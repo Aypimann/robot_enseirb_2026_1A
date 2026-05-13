@@ -8,11 +8,12 @@
 
 /* TODO: Handle when asked to stop. */
 class MovementHandler {
-private:
+public:
   static constexpr uint16_t DETECTOR_DELAY_MS = 50;
   FastAccelStepperEngine engine_;
   Stepper stepperL_, stepperR_;
   float posX_, posY_;
+  float angle_ac=0.0f;
   uint64_t lastPing_;
   uint8_t curDetector_;
   std::array<Detector, 4> detectors_;
@@ -28,6 +29,7 @@ public:
   /* Experimental values. */
   static constexpr float WHEEL_DIAMETER = 7.32;
   static constexpr float WHEEL_DISTANCE = 18.5;
+  static constexpr uint16_t MOVE_MIN_DIST = 0.001;
   /* Defined values. */
   static constexpr uint16_t STEPS_PER_ROTATION = 200;
   static constexpr uint16_t MICROSTEPS = 8;
@@ -57,7 +59,8 @@ public:
    * @note This function is blocking and doesn't return while the robot is moving.
    */
   void rotate(float angle);
-
+  void  set_angle(float angle_aim,char inverted);
+  float calc_rotation(float dx, float dy);
   /**
    * @brief Process the movements requested to the robot.
    * @note This is to be called on every loop!
@@ -86,7 +89,7 @@ public:
    * @note This shouldn't be considered for rotation.
    */
   Stepper::Direction direction() const;
-  void go_to(std::array<float, 2>);
+  void go_to(float x, float y,char sens);
   std::array<float, 2> getPos() const;  
 };
 
