@@ -11,7 +11,6 @@ void setup() {
   Serial.begin(115200);
   while (!Serial)
     ;
-  Serial.println("began communication");
 }
 
 bool done = false;
@@ -24,8 +23,6 @@ void loop() {
     // hdl.rotate(90.0);
     // hdl.moveDist(7.0);
   }
-
-  delay(200);
 
   // for (int i = 0; i < 4; i++) {
   //   detectors[i].getDistance();
