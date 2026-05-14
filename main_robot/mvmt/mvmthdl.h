@@ -9,6 +9,13 @@
 /* TODO: Handle when asked to stop. */
 class MovementHandler {
 public:
+  struct Coo{
+    float x;
+    float y;
+    float angle;
+    char inverted;
+  };
+
   struct Move {
     /* Non-zero to avoid false positives. */
     enum { Rotation = 4, Translation } kind;
@@ -46,6 +53,8 @@ private:
   void updatePosition(uint32_t reqNo);
 
 public:
+  static constexpr uint16_t nbCoos = 2; 
+  struct Coo Coos[nbCoos]={{0,0,0,0},{-21.3,92.9,0,0}};
   /* Experimental values. */
   static constexpr float WHEEL_DIAMETER = 7.32;
   static constexpr float WHEEL_DISTANCE = 18.5;
