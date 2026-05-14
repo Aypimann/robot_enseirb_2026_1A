@@ -58,7 +58,6 @@ void MovementHandler::rotate(float angle) {
   rotateSteps(steps);
 }
 
-void MovementHandler::go_to(std::array<float, 2>) {}
 void  MovementHandler::set_angle(float angle_aim,char inverted){
   angle_aim+=180.0f*(1-inverted);
   float rotation=fmod(angle_aim-angle_ac,360.0f);
@@ -92,9 +91,8 @@ void MovementHandler::go_to(float x_aim,float y_aim,char sens) {
   posX_+=dx;
   posY_+=dy;
 }
->>>>>>> 5e6a310b1878cd16be48b0401fb1ca9da50486c2
 void MovementHandler::stop() {
-  stepperL_.stop();
+stepperL_.stop();
   stepperR_.stop();
 }
 
