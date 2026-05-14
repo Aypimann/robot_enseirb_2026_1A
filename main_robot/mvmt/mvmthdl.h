@@ -6,10 +6,9 @@
 #include <Arduino.h>
 #include <FastAccelStepper.h>
 
-/* TODO: Handle when asked to stop. */
 class MovementHandler {
 public:
-  struct Coo{
+  struct Coo {
     float x;
     float y;
     float angle;
@@ -24,11 +23,12 @@ public:
 
 private:
   static constexpr uint16_t DETECTOR_DELAY_MS = 50;
+  static constexpr uint32_t TIMEOUT_MS = 85'000;
   FastAccelStepperEngine engine_;
   Stepper stepperL_, stepperR_;
   /* Practical position. */
   float posX2_, posY2_, angle_;
-  uint64_t lastPing_;
+  uint64_t lastPing_, startTime_ = 0;
   uint8_t curDetector_;
   std::array<Detector, 4> detectors_;
   bool frontCollision_, backCollision_;
@@ -39,7 +39,7 @@ private:
   void rotateSteps(int32_t steps);
 
   /* Cycle through the detectors to actualize. */
-  void cycleDetector();
+  void cycleDetector(const uint64_t now);
 
   /* These are listed in the order they must be called. */
   void handleCollisions();
@@ -52,9 +52,10 @@ private:
   /* Update self's position and angle from the given request number. */
   void updatePosition(uint32_t reqNo);
 
+  /* Stops everything when the timer reaches TIMEOUT_MS. */
+  void timeOut(const uint64_t now);  
+
 public:
-  static constexpr uint16_t nbCoos = 2; 
-  struct Coo Coos[nbCoos]={{0,0,0,0},{-21.3,92.9,0,0}};
   /* Experimental values. */
   static constexpr float WHEEL_DIAMETER = 7.32;
   static constexpr float WHEEL_DISTANCE = 18.5;
@@ -64,7 +65,7 @@ public:
   static constexpr uint16_t MICROSTEPS = 8;
   /* Theoritical one. */
   float posX_, posY_;
-  float angle_ac=0.0f;
+  float angle_ac = 0.0f;
   MovementHandler();
 
   /**
@@ -81,8 +82,9 @@ public:
   /* I don't like method override :) */
   /**
    * @brief Move the robot by the given distance in centimeters.
+   * @param update Whether we update the theoritical coordinates of the bot.
    */
-  void moveDist(float dist);
+  void moveDist(float dist, bool update = true);
   /**
    * @brief Move the robot by the given number of steps.
    */
@@ -90,12 +92,11 @@ public:
 
   /**
    * @brief Rotate the robot by a given angle in degrees.
-   * @note This function is blocking and doesn't return while the robot is
-   * moving.
+   * @param update  Whether we update the theoritical coordinates of the bot.
    */
-  void rotate(float angle);
-  void  rotateTo(float angle_aim,char inverted);
-  float calc_rotation(float dx, float dy);
+  void rotate(float angle, bool update = true);
+  void rotateTo(float angle_aim, Stepper::Direction dir = Stepper::Forward);
+  static float calcRotation(float dx, float dy);
   /**
    * @brief Process the movements requested to the robot.
    * @note This is to be called on every loop!
@@ -124,10 +125,14 @@ public:
    * @note This shouldn't be considered for rotation.
    */
   Stepper::Direction direction() const;
-  void goTo(float x, float y,char sens);
-  std::array<float, 2> getPos() const;  
+  void goTo(float x, float y, Stepper::Direction dir = Stepper::Forward);
+  std::array<float, 2> getPos() const;
 
   float getAngle() const;
+
+  /* Start the inner timer so the bot doesn't continue running even when time
+   * is out.*/
+  void startTimer();
 };
 
 #endif /* MVMTHDLH_ */

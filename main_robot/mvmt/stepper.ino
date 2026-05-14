@@ -66,6 +66,8 @@ Stepper::Direction Stepper::direction() const {
   return end_ - current_ < 0 ? Backward : Forward;
 }
 
+void Stepper::finishAll() { currentReq_ = reqs_.size() - 1; }
+
 uint32_t Stepper::leftInQueue() const { return reqs_.size() - currentReq_ - 1; }
 int32_t Stepper::currentRequest() const { return currentReq_; }
 const std::vector<int32_t> &Stepper::requests() const { return reqs_; }

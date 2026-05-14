@@ -40,4 +40,6 @@ float Detector::getDistance() {
 
 float Detector::cachedDistance() const { return distance_; }
 
-bool Detector::hasCollision() const { return distance_ < DISTANCE_THRESHOLD; }
+bool Detector::hasCollision() const {
+  return distance_ > ERROR_DISTANCE && distance_ < DISTANCE_THRESHOLD;
+}

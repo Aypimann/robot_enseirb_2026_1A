@@ -49,6 +49,8 @@ public:
   void stop();
   void resume();
   void processSteps();
+  /* Empty the request queue. */
+  void finishAll();
   /* Process the steps and call the given lambda when done. */
   template <typename F> void processSteps(F &&onFinished);
   bool isStopped() const;
