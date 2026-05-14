@@ -5,8 +5,8 @@ int goal;
 char mode;
 int dist_goal;
 
-const float encoder_per_mm = 1;
-const float encoder_per_degree = 1;
+const float twice_encoder_per_mm = 1;
+const float twice_encoder_per_degree = 1;
 
 inline void mes_pos() {
   l_last_mes_enc_count = encoder_l.getCount();
@@ -20,6 +20,9 @@ float compute_motor_power() {
 }
 
 void movement_hand(){
+  char debug[50];
+  sprintf(debug, "mode : %c\n", mode);
+  Serial.println(debug);
   int l_cur_enc_count = encoder_l.getCount();
   int r_cur_enc_count = encoder_r.getCount();
 
@@ -67,13 +70,13 @@ void movement_hand(){
 void backforward(float dist) {
   mes_pos();
   mode = 'f';
-  goal = dist * encoder_per_mm;
+  goal = dist * twice_encoder_per_mm;
 }
 
 void rotate(float degrees) {
   mes_pos();
   mode = 'r';
-  goal = degrees * encoder_per_degree;
+  goal = degrees * twice_encoder_per_degree;
 }
 
 void crab(int x) {

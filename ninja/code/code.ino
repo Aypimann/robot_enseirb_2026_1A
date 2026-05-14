@@ -17,6 +17,9 @@ void eating(){
 }
 
 void setup() {
+  Serial.begin(115200);
+  while (!Serial) ;
+  Serial.println("C'est le bon code ?");
   setup_pins();
   team = get_team();
   next_goal = 'a';
@@ -25,12 +28,20 @@ void setup() {
 }
 
 void loop() {
-  if (uptime() > 92) ending = 2;
+  Serial.println("looping");
+  //if (uptime() > 92) ending = 2;
   if (ending) {
+    Serial.println("end");
+    char debug[50];
+    sprintf(debug, "mode : %d\n", ending);
+    Serial.println(debug);
+    Serial.println('0' + ending);
     if(ending == 1) eating();
     return;
   }
+  Serial.println("looping2");
   if(-10 < dist_goal && dist_goal < 10) itteration_being_arrived ++;
+  Serial.println("looping3");
   if (itteration_being_arrived > 50) {
     next_goal ++;
     itteration_being_arrived = 0;
@@ -67,4 +78,6 @@ void loop() {
         break;
     }
   }
+  Serial.println("looping3");
+  movement_hand();
 }
