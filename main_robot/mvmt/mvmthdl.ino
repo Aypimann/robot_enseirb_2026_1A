@@ -75,6 +75,8 @@ void MovementHandler::go_to(float x_aim,float y_aim,char sens) {
   
   set_angle(calc_rotation(dx,dy),sens);
   moveDist(sqrt(pow(dx,2)+pow(dy,2)));
+  posX_+=dx;
+  posY_+=dy;
 }
 void MovementHandler::stop() {
   stepperL_.stop();
