@@ -26,13 +26,13 @@ void loop() {
                {-17.5, 92.9, Forward},
                {-17.5, 25.1, Backward},
                {-17.5, 46.4, Forward},
-               {20.9253, 145.97, Forward},
-               {91.206, 145.97, Backward},
-               {77.0603, 145.97, Forward},
+               {20.9253, 148, Forward},
+               {91.206, 148, Backward},
+               {77.0603, 148, Forward},
                {17.4963, 93.9283, Forward},
                {92.276, 93.9283, Backward},
-               {-4.0, 93.9, Forward},
-               {-4.0, -4.0, Backward}};
+               {-3.0, 93.9, Forward},
+               {-3.0, -6.0, Backward}};
 
   if (!done) {
     done = true;
