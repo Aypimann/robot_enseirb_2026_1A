@@ -8,7 +8,10 @@
 #define MOTOR_L_A 13
 #define MOTOR_L_B 12
 #define MOTOR_R_A 14
-#define MOTOR_R_B 27
+#define MOTOR_R_B 27:w
+
+// trig and echo may be inverted
+#define FORWARD_DET_TRIG 15
 
 #define STRAT_BUTTON 21
 

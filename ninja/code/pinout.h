@@ -3,6 +3,10 @@
 
 #include "ESP32Encoder.h" // https://github.com/madhephaestus/ESP32Encoder.git 
 #include "Arduino.h"
+
+// connect back detector on the same side as esp32's USB
+extern Detector back_detector;
+extern Detector front_detector;
  
 // connect the left encoder near the esp32
 extern ESP32Encoder encoder_l;
@@ -17,6 +21,7 @@ char get_team();
 
 //connect the grab servo alone
 void set_crab_servo(int pos);
+
 void set_grab_servo(int pos);
 
 void setup_pins();
