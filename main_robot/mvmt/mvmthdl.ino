@@ -47,6 +47,8 @@ void MovementHandler::rotateSteps(int32_t steps) {
 void MovementHandler::moveDist(float dist) {
   moves_.push_back({Move::Translation, dist});
   moveSteps(distToSteps(dist));
+  posX_+=std::cosf(angle_ac)*dist;
+  posX_+=std::sinf(angle_ac)*dist;
 }
 
 void MovementHandler::rotate(float angle) {
