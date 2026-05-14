@@ -1,6 +1,10 @@
 #include "pinout.h"
 
-void boackforward(int y);
+int dist_goal;
+
+void movement_hand();
+
+void backforward(int dist);
 
 void rotate(int degrees);
 
