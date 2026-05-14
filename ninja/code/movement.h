@@ -1,7 +1,11 @@
 #include "pinout.h"
 
-void boackforward(int y);
+extern int dist_goal;
 
-void rotate(int degrees);
+void movement_hand();
 
-void crab(int x);
+void backforward(float dist);
+
+void rotate(float degrees);
+
+void crab(float x);

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _ESP32Encoder
+#define _ESP32Encoder
+
 #include <driver/gpio.h>
 #include <driver/pcnt.h>
 #ifndef ARDUINO
@@ -75,5 +77,4 @@ private:
   bool working;
 };
 
-//Added by Sloeber
-#pragma once
+#endif // !_ESP32Encoder

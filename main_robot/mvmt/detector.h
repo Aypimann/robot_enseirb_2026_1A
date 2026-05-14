@@ -14,6 +14,7 @@ public:
   static constexpr uint16_t LOGICAL_THRESHOLD = 2000;
   /* The minimum distance before we consider it a collision. */
   static constexpr float DISTANCE_THRESHOLD = 20.0;
+  static constexpr float ERROR_DISTANCE = 1.f;
 
   Detector(uint8_t echoPin, bool analog = false);
   /* Default impl because CPP. */
