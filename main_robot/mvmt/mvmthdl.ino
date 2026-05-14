@@ -92,7 +92,8 @@ void MovementHandler::goTo(float xAim, float yAim, Stepper::Direction dir) {
 
   float angle = calcRotation(dx, dy);
   rotateTo(angle, dir);
-  moveDist(std::sqrt(dx * dx + dy * dy), false);
+  float inv = dir == Stepper::Backward ? -1.f : 1.f;
+  moveDist(inv * std::sqrt(dx * dx + dy * dy), false);
   posX_ = xAim;
   posY_ = yAim;
 }

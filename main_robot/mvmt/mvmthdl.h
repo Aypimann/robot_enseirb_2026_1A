@@ -8,13 +8,6 @@
 
 class MovementHandler {
 public:
-  struct Coo {
-    float x;
-    float y;
-    float angle;
-    char inverted;
-  };
-
   struct Move {
     /* Non-zero to avoid false positives. */
     enum { Rotation = 4, Translation } kind;
