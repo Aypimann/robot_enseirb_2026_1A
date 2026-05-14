@@ -58,41 +58,39 @@ void MovementHandler::rotate(float angle) {
   rotateSteps(steps);
 }
 
-void  MovementHandler::set_angle(float angle_aim,char inverted){
-  angle_aim+=180.0f*(1-inverted);
-  float rotation=fmod(angle_aim-angle_ac,360.0f);
-  if(abs(rotation)>180)
-    rotation=rotation-signe(rotation)*360;
+void MovementHandler::rotateTo(float angle_aim, char inverted) {
+  angle_aim += 180.0f * (1 - inverted);
+  float rotation = fmod(angle_aim - angle_ac, 360.0f);
+  if (std::fabs(rotation) > 180)
+    rotation = rotation - signe(rotation) * 360;
   rotate(rotation);
-  Serial.printf("cor:%f ac:%f\n",rotation,angle_ac);
-  angle_ac+=rotation;
+  // Serial.printf("cor:%f ac:%f\n",rotation,angle_ac);
+  angle_ac += rotation;
 }
 
-int signe(float val){
-  return val<0 ? -1:1;
-}
-float MovementHandler::calc_rotation(float dx,float dy){
-  
-  float delta_angle=0;
-  if((abs(dx)>MOVE_MIN_DIST)||(abs(dy)>MOVE_MIN_DIST)){
-    delta_angle=atan(dy/dx)*(180/PI);//repètre tab
-    if(dx<0)
-      delta_angle= delta_angle-180;
+int signe(float val) { return val < 0 ? -1 : 1; }
+float MovementHandler::calc_rotation(float dx, float dy) {
+
+  float delta_angle = 0;
+  if ((std::fabs(dx) > MOVE_MIN_DIST) || (std::fabs(dy) > MOVE_MIN_DIST)) {
+    delta_angle = std::atanf(dx / dy) * (180 / PI); // repètre tab
+    if (dx < 0.0)
+      delta_angle -= 180.0;
   }
-  
+
   return delta_angle;
 }
-void MovementHandler::go_to(float x_aim,float y_aim,char sens) {
-  float dx=x_aim-posX_;
-  float dy=y_aim-posY_;
-  
-  set_angle(calc_rotation(dx,dy),sens);
-  moveDist(sqrt(pow(dx,2)+pow(dy,2)));
-  posX_+=dx;
-  posY_+=dy;
+void MovementHandler::goTo(float x_aim, float y_aim, char sens) {
+  float dx = x_aim - posX_;
+  float dy = y_aim - posY_;
+
+  rotateTo(calc_rotation(dx, dy), sens);
+  moveDist(std::sqrt(dx * dx) + std::sqrt(dy * dy));
+  posX_ += dx;
+  posY_ += dy;
 }
 void MovementHandler::stop() {
-stepperL_.stop();
+  stepperL_.stop();
   stepperR_.stop();
 }
 
@@ -177,7 +175,10 @@ void MovementHandler::updatePosition(uint32_t reqNo) {
     angle_ += m.by;
   else if (m.kind == Move::Translation) {
     float rads = angle_ * M_PI / 180.0;
-    posX_ += std::cosf(rads);
-    posY_ += std::sinf(rads);
+    const float dist = m.by;
+    posX2_ += dist * std::cosf(rads);
+    posY2_ += dist * std::sinf(rads);
   }
 }
+
+float MovementHandler::getAngle() const { return angle_; }

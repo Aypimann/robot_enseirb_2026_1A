@@ -44,8 +44,6 @@ void Stepper::processSteps() { processSteps(std::move(Stepper::noop)); }
 
 template <typename F> void Stepper::processSteps(F &&onFinished) {
   current_ = hdl_->getCurrentPosition();
-  Serial.printf("pos: %d end: %d\r\n", current_, end_);
-  // Serial.printf("pos: %d vs end: %d\r\n", current_, end_);
   if (current_ == end_) {
     if (currentReq_ != -1 && callbackNo_ == 0) {
       onFinished();
