@@ -17,7 +17,7 @@ void loop() {
     // hdl.moveSteps(200);
     hdl.moveDist(30.0);
     hdl.moveDist(-30.0);
-    // hdl.rotate(90.0);
+    hdl.rotate(90.0);
     // hdl.moveDist(7.0);
   }
 

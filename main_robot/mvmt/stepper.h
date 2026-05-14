@@ -17,6 +17,10 @@ private:
   int32_t current_, end_;
   std::vector<int32_t> reqs_;
   bool stopped_;
+  /* A simple counter to avoid callling the lambda in processSteps multiple
+   * times. */
+  uint32_t callbackNo_;
+  static void noop();
 
 public:
   int32_t currentReq_;
@@ -45,6 +49,8 @@ public:
   void stop();
   void resume();
   void processSteps();
+  /* Process the steps and call the given lambda when done. */
+  template <typename F> void processSteps(F &&onFinished);
   bool isStopped() const;
 
   /* Number of requests left in the queue. */

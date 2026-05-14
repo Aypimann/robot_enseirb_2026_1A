@@ -8,15 +8,23 @@
 
 /* TODO: Handle when asked to stop. */
 class MovementHandler {
+public:
+  struct Move {
+    /* Non-zero to avoid false positives. */
+    enum { Rotation = 4, Translation } kind;
+    float by;
+  };
+
 private:
   static constexpr uint16_t DETECTOR_DELAY_MS = 50;
   FastAccelStepperEngine engine_;
   Stepper stepperL_, stepperR_;
-  float posX_, posY_;
+  float posX_, posY_, angle_;
   uint64_t lastPing_;
   uint8_t curDetector_;
-  std::array<Detector, 4> detectors_; 
+  std::array<Detector, 4> detectors_;
   bool frontCollision_, backCollision_;
+  std::vector<Move> moves_;
   /**
    * @brief Rotate by a given number of steps.
    */
@@ -30,7 +38,11 @@ private:
   void maybeResume();
   void resetCollisions();
 
+  /* Whether the given detector is on the front or back. */
   static bool frontDetector(uint8_t index);
+
+  /* Update self's position and angle from the given request number. */
+  void updatePosition(uint32_t reqNo);
 
 public:
   /* Experimental values. */
@@ -47,6 +59,10 @@ public:
    * @return The number of steps the wheel must do.
    */
   static int32_t distToSteps(float dist);
+  /* We only stop during a movement, not a rotation, right?
+   * TODO: Figure this out, this might impact on the fly position calculations.
+   */
+  static float stepsToDist(int32_t steps);
 
   /* I don't like method override :) */
   /**
@@ -94,7 +110,7 @@ public:
    */
   Stepper::Direction direction() const;
   void go_to(std::array<float, 2>);
-  std::array<float, 2> getPos() const;  
+  std::array<float, 2> getPos() const;
 };
 
 #endif /* MVMTHDLH_ */

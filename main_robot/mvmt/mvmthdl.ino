@@ -2,7 +2,7 @@
 #include "esp32-hal.h"
 #include "mvmthdl.h"
 #include "stepper.h"
-#include <math.h>
+#include <cmath>
 
 MovementHandler::MovementHandler() {
   engine_ = FastAccelStepperEngine();
@@ -10,19 +10,26 @@ MovementHandler::MovementHandler() {
   stepperL_ = Stepper(&engine_, 16, 4);
   stepperR_ = Stepper(&engine_, 5, 17);
   curDetector_ = 0;
-  detectors_ = {Detector(34), Detector(36, true), Detector(35), Detector(39, true)};
+  detectors_ = {Detector(34), Detector(36, true), Detector(35),
+                Detector(39, true)};
   lastPing_ = 0;
 }
 
-bool MovementHandler::frontDetector(uint8_t index) {
-  return index < 2;
-}
+bool MovementHandler::frontDetector(uint8_t index) { return index < 2; }
 
 int32_t MovementHandler::distToSteps(float dist) {
-  float wheel_perimeter = M_PI * WHEEL_DIAMETER;
-  float dstep = wheel_perimeter / STEPS_PER_ROTATION;
+  constexpr float wheel_perimeter = M_PI * WHEEL_DIAMETER;
+  constexpr float dstep = wheel_perimeter / STEPS_PER_ROTATION;
   float steps = dist / dstep;
   return roundf(steps);
+}
+
+/* Can be used when the robot is stopped during its movement.
+ * Shouldn't be used with rotation though. */
+float MovementHandler::stepsToDist(int32_t steps) {
+  constexpr float wheel_perimeter = M_PI * WHEEL_DIAMETER;
+  constexpr float dstep = wheel_perimeter / STEPS_PER_ROTATION;
+  return (float)steps * dstep;
 }
 
 void MovementHandler::moveSteps(int32_t steps) {
@@ -37,20 +44,21 @@ void MovementHandler::rotateSteps(int32_t steps) {
   stepperR_.request(steps);
 }
 
-void MovementHandler::moveDist(float dist) { moveSteps(distToSteps(dist)); }
+void MovementHandler::moveDist(float dist) {
+  moves_.push_back({Move::Translation, dist});
+  moveSteps(distToSteps(dist));
+}
+
 void MovementHandler::rotate(float angle) {
+  moves_.push_back({Move::Rotation, angle});
   /* Convert the angle to a distance to be traveled by the bot. */
   float perimeter = WHEEL_DISTANCE * 2.0 * M_PI;
   float dist = perimeter / 2.0 * (angle / 360.0);
   int32_t steps = distToSteps(dist);
   rotateSteps(steps);
 }
-float MovementHandler::calc_angle(){
-  
-}
-void MovementHandler::go_to(std::array<float, 2>) {
 
-}
+void MovementHandler::go_to(std::array<float, 2>) {}
 void MovementHandler::stop() {
   stepperL_.stop();
   stepperR_.stop();
@@ -62,11 +70,14 @@ void MovementHandler::resume() {
 }
 
 void MovementHandler::process() {
+  /* If one stepper is finished, both are finished. We never fire only one. */
   stepperL_.processSteps();
-  stepperR_.processSteps();
+  stepperR_.processSteps([this] {
+    int32_t req = stepperR_.currentRequest();
+    updatePosition(req);
+  });
   cycleDetector();
   handleCollisions();
-  // Serial.printf("| front: %d back: %d\r\n", frontCollision_, backCollision_);
   maybeResume();
   resetCollisions();
 }
@@ -112,7 +123,7 @@ void MovementHandler::handleCollisions() {
       backCollision_ = true;
       stop();
     }
-  } 
+  }
 }
 
 void MovementHandler::resetCollisions() {
@@ -126,4 +137,15 @@ void MovementHandler::maybeResume() {
     resume();
   if (!backCollision_ && direction() == Stepper::Backward)
     resume();
+}
+
+void MovementHandler::updatePosition(uint32_t reqNo) {
+  Move m = moves_[reqNo];
+  if (m.kind == Move::Rotation)
+    angle_ += m.by;
+  else if (m.kind == Move::Translation) {
+    float rads = angle_ * M_PI / 180.0;
+    posX_ += std::cosf(rads);
+    posY_ += std::sinf(rads);
+  }
 }
