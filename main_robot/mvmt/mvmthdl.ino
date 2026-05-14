@@ -57,10 +57,8 @@ void MovementHandler::rotate(float angle) {
   int32_t steps = distToSteps(dist);
   rotateSteps(steps);
 }
-<<<<<<< HEAD
 
 void MovementHandler::go_to(std::array<float, 2>) {}
-=======
 void  MovementHandler::set_angle(float angle_aim,char inverted){
   angle_aim+=180.0f*(1-inverted);
   float rotation=fmod(angle_aim-angle_ac,360.0f);
