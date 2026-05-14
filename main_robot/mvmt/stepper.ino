@@ -38,36 +38,20 @@ void Stepper::resume() {
 
 bool Stepper::isStopped() const { return stopped_; }
 
-void Stepper::request(int32_t steps) { reqs_.push_back(steps); }
-
-void Stepper::processSteps() { processSteps(std::move(Stepper::noop)); }
-
-template <typename F> void Stepper::processSteps(F &&onFinished) {
-  current_ = hdl_->getCurrentPosition();
-  if (current_ == end_) {
-    if (currentReq_ != -1 && callbackNo_ == 0) {
-      onFinished();
-      callbackNo_++;
-    }
-    if (leftInQueue() != 0) {
-      callbackNo_ = 0;
-      currentReq_++;
-      /* Just to make sure we're indeed running. */
-      stopped_ = false;
-      int32_t steps = reqs_[currentReq_];
-      end_ += steps;
-      hdl_->move(steps);
-      stopped_ = false;
-    }
-  }
-}
-
 Stepper::Direction Stepper::direction() const {
   return end_ - current_ < 0 ? Backward : Forward;
 }
 
-uint32_t Stepper::leftInQueue() const { return reqs_.size() - currentReq_ - 1; }
+void Stepper::move(int32_t steps) { hdl_->move(steps); }
+
 int32_t Stepper::currentRequest() const { return currentReq_; }
-const std::vector<int32_t> &Stepper::requests() const { return reqs_; }
 int32_t Stepper::position() const { return hdl_->getCurrentPosition(); }
-void Stepper::noop() {}
+
+template <typename F> void Stepper::onFinished(F &&f) {
+  if (current_ == end_) {
+    if (currentReq_ != -1 && callbackNo_ != currentReq_) {
+      f();
+      callbackNo_ = currentReq_;
+    }
+  }
+}
