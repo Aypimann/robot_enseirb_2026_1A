@@ -3,6 +3,7 @@
 int l_last_mes_enc_count, r_last_mes_enc_count;
 int goal;
 char mode;
+int dist_goal;
 
 const float encoder_per_mm = 1;
 const float encoder_per_degree = 1;
@@ -72,7 +73,7 @@ void backforward(float dist) {
 void rotate(float degrees) {
   mes_pos();
   mode = 'r';
-  gloal = degrees * encoder_per_degree;
+  goal = degrees * encoder_per_degree;
 }
 
 void crab(int x) {

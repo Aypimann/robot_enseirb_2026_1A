@@ -1,4 +1,5 @@
 #include "pinout.h"
+#include "movement.h"
 
 char team;
 char next_goal;
@@ -9,7 +10,7 @@ char ending = 0;
 
 inline float uptime(){
   return 100;
-};
+}
 
 void eating(){
   while(1); // TODO
@@ -41,25 +42,25 @@ void loop() {
         rotate(team * 90);
         break;
       case 'd': //pushes cases
-        backforward(265)
+        backforward(265);
         break;
       case 'e': // steps back from cases
-        backforward(-190)
+        backforward(-190);
         break;
       case 'f': // rotates to continue the way to eating zone
         rotate(team *-90);
         break;
       case 'g': // walks vertically to zone, pushes useless cases
-        backforward(500)
+        backforward(500);
         break;
       case 'h': // steps away from nuts to rotate
-        backforward(-140)
+        backforward(-140);
         break;
       case 'i': // rotate to the eating zone
         rotate(team * 90);
         break;
       case 'j':
-        backforward(195)
+        backforward(195);
         break;
       default:
         ending = 1;
