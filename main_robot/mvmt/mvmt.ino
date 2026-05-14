@@ -1,30 +1,31 @@
+#include "detector.h"
 #include "mvmthdl.h"
-#include "stepper.h"
 #include <Arduino.h>
 
 MovementHandler hdl = MovementHandler();
 
-void setup() {}
+void setup() {
+  Serial.begin(115200);
+  while (!Serial)
+    ;
+}
 
 bool done = false;
-
 void loop() {
   if (!done) {
     done = true;
-    hdl.moveDist<false>(20.0);
-    hdl.rotate<false>(90.0);
-    hdl.moveDist<false>(10.0);
+    Serial.printf("%f %f %f\r\n", hdl.posX_, hdl.posY_, hdl.angle_ac);
+    hdl.goTo(10.0, 10.0, 1);
+    Serial.printf("%f %f %f\r\n", hdl.posX_, hdl.posY_, hdl.angle_ac);
+    hdl.rotateTo(90.0, 1);
+    Serial.printf("%f %f %f\r\n", hdl.posX_, hdl.posY_, hdl.angle_ac);
+    hdl.goTo(20.0, 10.0, 1);
+    Serial.printf("%f %f %f\r\n", hdl.posX_, hdl.posY_, hdl.angle_ac);
+    hdl.goTo(0.0, 0.0, 1);
+    Serial.printf("%f %f %f\r\n", hdl.posX_, hdl.posY_, hdl.angle_ac);
+    hdl.rotateTo(0.0, 1);
+    Serial.printf("%f %f %f\r\n", hdl.posX_, hdl.posY_, hdl.angle_ac);
   }
-
-  /* New API ? Will be put inside MovementHandler */
-  if constexpr (false) {
-    FastAccelStepperEngine engine = FastAccelStepperEngine();
-    Stepper left = Stepper(engine, 16, 4), right = Stepper(engine, 5, 17);
-    int32_t steps = MovementHandler::distToSteps(20.0);
-    left.request(steps);
-    right.request(steps);
-
-    left.processSteps();
-    right.processSteps();
-  }
+  
+  hdl.process();
 }
