@@ -59,7 +59,7 @@ void MovementHandler::rotate(float angle) {
 }
 
 void MovementHandler::rotateTo(float angle_aim, char inverted) {
-  angle_aim += 180.0f * (1 - inverted);
+  angle_aim += 180.0f * inverted;
   float rotation = fmod(angle_aim - angle_ac, 360.0f);
   if (std::fabs(rotation) > 180)
     rotation = rotation - signe(rotation) * 360;
