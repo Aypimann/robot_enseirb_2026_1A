@@ -31,6 +31,8 @@ void loop() {
   if (uptime() > 92) ending = 2;
   Serial.println("cp2");
   if (ending) {
+    set_l_motor(0);
+    set_r_motor(0);
     Serial.println("end");
     char debug[50];
     sprintf(debug, "end : %d, time: %f\n", ending, uptime());

@@ -43,17 +43,17 @@ void movement_hand(){
   if (mode == 'f'){
     dist_goal = goal - comm;
     float power = compute_motor_power();
-    if (-10 < diff && diff < 10) {
+    if (diff < -3) {
       set_l_motor(power);
+      set_r_motor(power * .5);
+      return;
+    }
+    if (diff < -3) {
+      set_l_motor(power * .5);
       set_r_motor(power);
       return;
     }
-    if (diff < 0) {
-      set_l_motor(power);
-      set_r_motor(0);
-      return;
-    }
-    set_l_motor(0);
+    set_l_motor(power);
     set_r_motor(power);
     return;
   }
